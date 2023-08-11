@@ -14,31 +14,6 @@ void ARaceCarPawn::Tick(float DeltaSeconds)
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Time: %f"), TimeCounter));
 }
 
-int32 ARaceCarPawn::GetCurrentPosition()
-{
-	return CurrentPosition;
-}
-
-void ARaceCarPawn::SetPosition(int32 Position)
-{
-	CurrentPosition = Position;
-}
-
-void ARaceCarPawn::SetLapCount(int32 Lap)
-{
-	CurrentLap = Lap;
-}
-
-int32 ARaceCarPawn::GetLapCount()
-{
-	return CurrentLap;
-}
-
-float ARaceCarPawn::GetCurrentTime()
-{
-	return TimeCounter;
-}
-
 void ARaceCarPawn::ClearTimer()
 {
 	LapTimes.Add(TimeCounter);
@@ -47,7 +22,7 @@ void ARaceCarPawn::ClearTimer()
 
 float ARaceCarPawn::GetCurrentBestTime()
 {
-	if (FMath::Max<float>(LapTimes) != 0.0f)
+	if (FMath::Min<float>(LapTimes) != NULL)
 	{
 		return FMath::Min<float>(LapTimes);
 	}

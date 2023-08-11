@@ -16,20 +16,8 @@ class HANDLING_API ARaceCarPawn : public AWheeledVehiclePawn
 
 	virtual void Tick(float DeltaSeconds) override;
 
-	UFUNCTION(BLueprintCallable)
-	int32 GetCurrentPosition();
 
-	UFUNCTION(BLueprintCallable)
-	void SetPosition(int32 Position);
-
-	UFUNCTION(BLueprintCallable)
-	void SetLapCount(int32 Lap);
-
-	UFUNCTION(BLueprintCallable)
-	int32 GetLapCount();
-
-	UFUNCTION(BLueprintCallable)
-	float GetCurrentTime();
+public:
 
 	UFUNCTION(BLueprintCallable)
 	void ClearTimer();
@@ -37,17 +25,19 @@ class HANDLING_API ARaceCarPawn : public AWheeledVehiclePawn
 	UFUNCTION(BLueprintCallable)
 	float GetCurrentBestTime();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	int32 CurrentPosition;
 
-	UPROPERTY(EditAnywhere)
-	int32 CurrentLap;
-
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	float TimeCounter;
 
-public:
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	int32 CurrentLap;
+
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	FString Name;
+
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	TArray<float> LapTimes;
 
 };
