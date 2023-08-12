@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include <RaceCarPawn.h>
+#include <GameFramework\PlayerStart.h>
 #include "SPRaceGameMode.generated.h"
 
 /**
@@ -20,8 +21,13 @@ class ASPRaceGameMode : public AGameModeBase
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
+	
+	TArray<FTransform> FindAllPlayerStart();
 
 public:
+
+	UFUNCTION(BLueprintCallable)
+	void SpawnPlayer(APlayerController* PlayerController);
 
 	void SortCarPosition();
 
@@ -29,6 +35,12 @@ public:
 
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	TSubclassOf<AActor> PathBP;
+
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	TSubclassOf<ARaceCarPawn> PlayerCar;
+
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	TSubclassOf<ARaceCarPawn> AICar;
 
 	AActor* Path;
 

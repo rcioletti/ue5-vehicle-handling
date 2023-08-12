@@ -9,12 +9,11 @@ ASPRaceGameMode::ASPRaceGameMode() {
 
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
-	DefaultPawnClass = ARaceCarPawn::StaticClass();
+	DefaultPawnClass = nullptr;
 
 	static ConstructorHelpers::FClassFinder<APlayerController> myControllerOb(TEXT("Blueprint'/Game/Blueprints/VehiclePlayerController.VehiclePlayerController_C'"));
 	auto myControllerClass = myControllerOb.Class;
 
-	//PlayerControllerClass = AShooterPlayerController::StaticClass();
 	PlayerControllerClass = myControllerClass;
 }
 
@@ -31,12 +30,62 @@ void ASPRaceGameMode::BeginPlay()
 
 	TArray<AActor*> PathArray;
 
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARaceCarPawn::StaticClass(), Cars);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), PathBP, PathArray);
 
 	if (!PathArray.IsEmpty()) {
 		Path = PathArray[0];
 	}
+}
+
+void ASPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
+{
+	TArray<FTransform> AllPlayerStartTransform = FindAllPlayerStart();
+
+	if (PlayerController->GetPawn() != nullptr) {
+		PlayerController->GetPawn()->Destroy();
+	}
+	
+	if (PlayerCar) {
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = PlayerController;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		const FVector SpawnLocation = AllPlayerStartTransform[0].GetLocation();
+		const FRotator SpawnRotation = AllPlayerStartTransform[0].Rotator();
+		ARaceCarPawn* SpawnedPlayerCar = Cast<ARaceCarPawn>(GetWorld()->SpawnActor(PlayerCar, &SpawnLocation, &SpawnRotation, SpawnParams));
+		PlayerController->Possess(SpawnedPlayerCar);
+	}
+
+	if (AICar) {
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		const FVector SpawnLocationBot1 = AllPlayerStartTransform[3].GetLocation();
+		const FRotator SpawnRotationBot1 = AllPlayerStartTransform[3].Rotator();
+		const FVector SpawnLocationBot2 = AllPlayerStartTransform[1].GetLocation();
+		const FRotator SpawnRotationBot2 = AllPlayerStartTransform[1].Rotator();
+		const FVector SpawnLocationBot3 = AllPlayerStartTransform[2].GetLocation();
+		const FRotator SpawnRotationBot3 = AllPlayerStartTransform[2].Rotator();
+		GetWorld()->SpawnActor(AICar, &SpawnLocationBot1, &SpawnRotationBot1, SpawnParams);
+		GetWorld()->SpawnActor(AICar, &SpawnLocationBot2, &SpawnRotationBot2, SpawnParams);
+		GetWorld()->SpawnActor(AICar, &SpawnLocationBot3, &SpawnRotationBot3, SpawnParams);
+	}
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARaceCarPawn::StaticClass(), Cars);
+}
+
+TArray<FTransform> ASPRaceGameMode::FindAllPlayerStart()
+{
+	TArray<AActor*> AllPlayerStartActor;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), AllPlayerStartActor);
+
+	TArray<FTransform> AllPlayerStartTransform;
+
+	for (AActor* PlayerStartActor : AllPlayerStartActor)
+	{
+		APlayerStart* PlayerStart = Cast<APlayerStart>(PlayerStartActor);
+		AllPlayerStartTransform.Add(PlayerStart->GetTransform());
+	}
+
+	return AllPlayerStartTransform;
 }
 
 void ASPRaceGameMode::SortCarPosition()
@@ -66,9 +115,9 @@ void ASPRaceGameMode::SortCarPosition()
 		ARaceCarPawn* FirstCar = Cast<ARaceCarPawn>(Cars[MaxCarIndex]);
 		FirstCar->CurrentPosition = i + 1;
 
-		if (GEngine)
+		//if (GEngine)
 			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("First Car Index %s"), *FString::FromInt(FirstCarIndex)));
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Progress %f Position %s Position in Car %s"), FMath::Max(CurrentPosition), *FString::FromInt(i + 1), *FString::FromInt(FirstCar->CurrentPosition)));
+			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Progress %f Position %s Position in Car %s"), FMath::Max(CurrentPosition), *FString::FromInt(i + 1), *FString::FromInt(FirstCar->CurrentPosition)));
 			
 
 		CurrentPosition[MaxCarIndex] = -1.0f;
