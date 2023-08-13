@@ -24,6 +24,8 @@ class ASPRaceGameMode : public AGameModeBase
 	
 	TArray<FTransform> FindAllPlayerStart();
 
+	TArray<AActor*> AllPlayerStartActor;
+
 public:
 
 	UFUNCTION(BLueprintCallable)
@@ -31,6 +33,7 @@ public:
 
 	void SortCarPosition();
 
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	TArray<AActor*> Cars;
 
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
@@ -48,4 +51,7 @@ public:
 
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	int32 GameLaps;
+
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	int32 MaxBots;
 };

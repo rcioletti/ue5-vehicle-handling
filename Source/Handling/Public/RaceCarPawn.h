@@ -32,7 +32,7 @@ public:
 	float TimeCounter;
 
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
-	int32 CurrentLap;
+	int32 CurrentLap = 1;
 
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	FString Name;

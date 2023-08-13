@@ -31,6 +31,7 @@ void ASPRaceGameMode::BeginPlay()
 	TArray<AActor*> PathArray;
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), PathBP, PathArray);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), AllPlayerStartActor);
 
 	if (!PathArray.IsEmpty()) {
 		Path = PathArray[0];
@@ -56,17 +57,16 @@ void ASPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
 	}
 
 	if (AICar) {
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		const FVector SpawnLocationBot1 = AllPlayerStartTransform[3].GetLocation();
-		const FRotator SpawnRotationBot1 = AllPlayerStartTransform[3].Rotator();
-		const FVector SpawnLocationBot2 = AllPlayerStartTransform[1].GetLocation();
-		const FRotator SpawnRotationBot2 = AllPlayerStartTransform[1].Rotator();
-		const FVector SpawnLocationBot3 = AllPlayerStartTransform[2].GetLocation();
-		const FRotator SpawnRotationBot3 = AllPlayerStartTransform[2].Rotator();
-		GetWorld()->SpawnActor(AICar, &SpawnLocationBot1, &SpawnRotationBot1, SpawnParams);
-		GetWorld()->SpawnActor(AICar, &SpawnLocationBot2, &SpawnRotationBot2, SpawnParams);
-		GetWorld()->SpawnActor(AICar, &SpawnLocationBot3, &SpawnRotationBot3, SpawnParams);
+		for (int32 i = 1; i < MaxBots + 1; i++)
+		{
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			const FVector SpawnLocationBot = AllPlayerStartTransform[i].GetLocation();
+			const FRotator SpawnRotationBot = AllPlayerStartTransform[i].Rotator();
+			ARaceCarPawn* SpawnedBot = Cast<ARaceCarPawn>(GetWorld()->SpawnActor(AICar, &SpawnLocationBot, &SpawnRotationBot, SpawnParams));
+			SpawnedBot->Name = "Bot ";
+			SpawnedBot->Name.Append(FString::FromInt(i));
+		}
 	}
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARaceCarPawn::StaticClass(), Cars);
@@ -74,9 +74,6 @@ void ASPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
 
 TArray<FTransform> ASPRaceGameMode::FindAllPlayerStart()
 {
-	TArray<AActor*> AllPlayerStartActor;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), AllPlayerStartActor);
-
 	TArray<FTransform> AllPlayerStartTransform;
 
 	for (AActor* PlayerStartActor : AllPlayerStartActor)

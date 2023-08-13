@@ -10,8 +10,8 @@ void ARaceCarPawn::Tick(float DeltaSeconds)
 
 	TimeCounter = DeltaSeconds + TimeCounter;
 
-	//if (GEngine)
-		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Time: %f"), TimeCounter));
+
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Name: %s"), *Name));
 }
 
 void ARaceCarPawn::ClearTimer()
