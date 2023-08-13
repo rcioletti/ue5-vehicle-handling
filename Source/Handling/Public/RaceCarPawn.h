@@ -4,6 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "WheeledVehiclePawn.h"
+#include "Sound/SoundCue.h"
+#include "Components/AudioComponent.h"
+#include "ChaosWheeledVehicleMovementComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "RaceCarPawn.generated.h"
 
 /**
@@ -16,8 +20,26 @@ class HANDLING_API ARaceCarPawn : public AWheeledVehiclePawn
 
 	virtual void Tick(float DeltaSeconds) override;
 
+	virtual void BeginPlay() override;
+
+	ARaceCarPawn();
 
 public:
+
+	UChaosWheeledVehicleMovementComponent* ChaosWheeledVehicleMovementComponent;
+
+	bool IsSkidding;
+
+	int32 CurrentGear;
+
+	void OnTireSkid();
+
+	void PlayEngineSound();
+
+	void OnGearChange();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Setup")
+	UParticleSystem* ExhaustPopParticle;
 
 	UFUNCTION(BLueprintCallable)
 	void ClearTimer();
@@ -25,19 +47,28 @@ public:
 	UFUNCTION(BLueprintCallable)
 	float GetCurrentBestTime();
 
-	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
 	int32 CurrentPosition;
 
-	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
 	float TimeCounter;
 
-	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
 	int32 CurrentLap = 1;
 
-	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
 	FString Name;
 
-	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
 	TArray<float> LapTimes;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Audio")
+	UAudioComponent* EngineAudioComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Audio")
+	UAudioComponent* ExhaustAudioComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Audio")
+	UAudioComponent* WheelAudioComponent;
 
 };
