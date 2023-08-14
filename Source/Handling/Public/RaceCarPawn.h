@@ -32,14 +32,19 @@ public:
 
 	int32 CurrentGear;
 
+	float CurrentWheelSkidVolume;
+
 	void OnTireSkid();
 
 	void PlayEngineSound();
 
 	void OnGearChange();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Setup")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
 	UParticleSystem* ExhaustPopParticle;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
+	UParticleSystem* WheelSmokeParticle;
 
 	UFUNCTION(BLueprintCallable)
 	void ClearTimer();

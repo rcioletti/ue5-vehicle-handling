@@ -48,12 +48,32 @@ void ARaceCarPawn::OnTireSkid()
 		for (int32 i = 0; i < ChaosWheeledVehicleMovementComponent->GetNumWheels() - 1; i++) {
 
 			if (!IsSkidding) {
+				
 				IsSkidding = ChaosWheeledVehicleMovementComponent->GetWheelState(i).bIsSkidding;
+			}
+
+			if (ChaosWheeledVehicleMovementComponent->GetWheelState(i).bIsSkidding) {
+				
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),
+					WheelSmokeParticle, 
+					ChaosWheeledVehicleMovementComponent->GetWheelState(i).ContactPoint,
+					FRotator(0.0f, 90.0f, 0.0f), 
+					FVector(0.4f, 0.4f, 0.4f),
+					true,
+					EPSCPoolMethod::AutoRelease,
+					true);
 			}
 		}
 
 		//Play Tire Skid Sound
-		IsSkidding ? WheelAudioComponent->SetVolumeMultiplier(0.1f) : WheelAudioComponent->SetVolumeMultiplier(0.0f);
+		if (IsSkidding) {
+			CurrentWheelSkidVolume = FMath::FInterpTo(CurrentWheelSkidVolume, 0.1, GetWorld()->GetDeltaSeconds(), 8.0f);
+			WheelAudioComponent->SetVolumeMultiplier(CurrentWheelSkidVolume);
+		}
+		else {
+			CurrentWheelSkidVolume = FMath::FInterpTo(CurrentWheelSkidVolume, 0.0f, GetWorld()->GetDeltaSeconds(), 8.0f);
+			WheelAudioComponent->SetVolumeMultiplier(CurrentWheelSkidVolume);
+		}
 	}
 }
 
@@ -73,7 +93,14 @@ void ARaceCarPawn::OnGearChange()
 			//Play Exhaust Pops
 			ExhaustAudioComponent->Play();
 			
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExhaustPopParticle, ExhaustAudioComponent->GetComponentLocation(), ExhaustAudioComponent->GetComponentRotation(), FVector(0.2, 0.2, 0.2));
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),
+				ExhaustPopParticle,
+				ExhaustAudioComponent->GetComponentLocation(),
+				ExhaustAudioComponent->GetComponentRotation(),
+				FVector(0.2, 0.2, 0.2),
+				true, 
+				EPSCPoolMethod::AutoRelease, 
+				true);
 
 			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Name: %s"), *ExhaustAudioComponent->GetComponentLocation().ToString()));
 			CurrentGear = ChaosWheeledVehicleMovementComponent->GetCurrentGear();
