@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include <RaceSaveGame.h>
+#include <RaceCarPawn.h>
 #include "RaceGameInstance.generated.h"
 
 /**
@@ -27,4 +28,13 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Game Manager")
 	void SaveGame();
+
+	UPROPERTY(BlueprintReadWrite, Category="Settings")
+	FName SelectedMap;
+
+	UPROPERTY(BlueprintReadWrite, Category="Settings")
+	TSubclassOf<ARaceCarPawn> SelectedCar;
+
+	UPROPERTY(BlueprintReadWrite, Category="Settings")
+	float Money;
 };

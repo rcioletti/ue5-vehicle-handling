@@ -4,6 +4,7 @@
 #include "SPRaceGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SplineComponent.h"
+#include <RaceGameInstance.h>
 
 ASPRaceGameMode::ASPRaceGameMode() {
 
@@ -27,6 +28,10 @@ void ASPRaceGameMode::Tick(float DeltaSeconds)
 void ASPRaceGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+	URaceGameInstance* GameInstance = Cast<URaceGameInstance>(GetGameInstance());
+
+	PlayerCar = GameInstance->SelectedCar;
 
 	TArray<AActor*> PathArray;
 

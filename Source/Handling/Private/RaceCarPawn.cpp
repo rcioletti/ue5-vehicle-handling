@@ -88,7 +88,7 @@ void ARaceCarPawn::OnGearChange()
 {
 	if (ExhaustAudioComponent->Sound) {
 	
-		if (ChaosWheeledVehicleMovementComponent->GetCurrentGear() != CurrentGear) {
+		if (ChaosWheeledVehicleMovementComponent->GetCurrentGear() > CurrentGear) {
 
 			//Play Exhaust Pops
 			ExhaustAudioComponent->Play();
