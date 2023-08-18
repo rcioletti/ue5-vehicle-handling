@@ -65,6 +65,9 @@ public:
 	FString Name;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
+	float NitrousContent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
 	TArray<float> LapTimes;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Audio")
