@@ -12,10 +12,10 @@ ASPRaceGameMode::ASPRaceGameMode() {
 	PrimaryActorTick.bCanEverTick = true;
 	DefaultPawnClass = nullptr;
 
-	static ConstructorHelpers::FClassFinder<APlayerController> myControllerOb(TEXT("Blueprint'/Game/Blueprints/VehiclePlayerController.VehiclePlayerController_C'"));
-	auto myControllerClass = myControllerOb.Class;
+	//static ConstructorHelpers::FClassFinder<APlayerController> myControllerOb(TEXT("/Game/Core/VehiclePlayerController.VehiclePlayerController_C"));
+	//auto myControllerClass = myControllerOb.Class;
 
-	PlayerControllerClass = myControllerClass;
+	//PlayerControllerClass = myControllerClass;
 }
 
 void ASPRaceGameMode::Tick(float DeltaSeconds)
@@ -31,7 +31,9 @@ void ASPRaceGameMode::BeginPlay()
 
 	URaceGameInstance* GameInstance = Cast<URaceGameInstance>(GetGameInstance());
 
-	PlayerCar = GameInstance->SelectedCar;
+	if (GameInstance->SelectedCar != nullptr) {
+		PlayerCar = GameInstance->SelectedCar;
+	}
 
 	TArray<AActor*> PathArray;
 
@@ -80,6 +82,10 @@ void ASPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
 TArray<FTransform> ASPRaceGameMode::FindAllPlayerStart()
 {
 	TArray<FTransform> AllPlayerStartTransform;
+	
+	if (AllPlayerStartActor.Num() <= 0) {
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), AllPlayerStartActor);
+	}
 
 	for (AActor* PlayerStartActor : AllPlayerStartActor)
 	{
