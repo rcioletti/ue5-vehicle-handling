@@ -23,5 +23,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category="Player Info")
 	float BestLapTime;
+
+	UPROPERTY(BlueprintReadWrite, Category="Player Info")
+	float Money;
 	
 };
