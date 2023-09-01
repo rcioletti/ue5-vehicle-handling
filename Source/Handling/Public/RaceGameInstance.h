@@ -36,5 +36,5 @@ public:
 	TSubclassOf<ARaceCarPawn> SelectedCar;
 
 	UPROPERTY(BlueprintReadWrite, Category="Settings")
-	int32 Money = 10000;
+	int32 Money;
 };
