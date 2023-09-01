@@ -25,6 +25,6 @@ public:
 	float BestLapTime;
 
 	UPROPERTY(BlueprintReadWrite, Category="Player Info")
-	float Money;
+	int32 Money;
 	
 };
