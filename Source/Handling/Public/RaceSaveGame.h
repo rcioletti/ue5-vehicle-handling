@@ -25,7 +25,7 @@ public:
 	float BestLapTime;
 
 	UPROPERTY(BlueprintReadWrite, Category="Player Stats")
-	int32 Money;
+	int32 Money = 10000;
 
 	UPROPERTY(BlueprintReadWrite, Category="Player Stats")
 	TArray<TSubclassOf<ARaceCarPawn>> OwnedCars;
