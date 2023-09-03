@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include <RaceCarPawn.h>
 #include "RaceSaveGame.generated.h"
-
 /**
  * 
  */
@@ -21,10 +21,13 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category="Player Info")
 	FString PlayerName;
 
-	UPROPERTY(BlueprintReadWrite, Category="Player Info")
+	UPROPERTY(BlueprintReadWrite, Category="Player Stats")
 	float BestLapTime;
 
-	UPROPERTY(BlueprintReadWrite, Category="Player Info")
-	int32 Money = 10000;
+	UPROPERTY(BlueprintReadWrite, Category="Player Stats")
+	int32 Money;
+
+	UPROPERTY(BlueprintReadWrite, Category="Player Stats")
+	TArray<TSubclassOf<ARaceCarPawn>> OwnedCars;
 	
 };

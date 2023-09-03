@@ -4,6 +4,11 @@
 #include "RaceGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
+URaceGameInstance::URaceGameInstance() {
+
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Game Instance Initialized")));
+}
+
 void URaceGameInstance::LoadGame()
 {
 	USaveGame* LoadedGame = UGameplayStatics::LoadGameFromSlot(SaveGameSlotName, 0);
@@ -22,5 +27,4 @@ void URaceGameInstance::LoadGame()
 void URaceGameInstance::SaveGame()
 {
 	const bool IsSaved = UGameplayStatics::SaveGameToSlot(SaveGameObject, SaveGameSlotName, 0);
-
 }

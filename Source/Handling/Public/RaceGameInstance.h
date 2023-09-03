@@ -17,6 +17,9 @@ class HANDLING_API URaceGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
+
+	URaceGameInstance();
+
 	UPROPERTY(BlueprintReadOnly)
 	FString SaveGameSlotName = "local_save";
 
@@ -34,7 +37,4 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category="Settings")
 	TSubclassOf<ARaceCarPawn> SelectedCar;
-
-	UPROPERTY(BlueprintReadWrite, Category="Settings")
-	int32 Money;
 };
