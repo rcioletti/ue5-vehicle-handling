@@ -88,23 +88,29 @@ void ARaceCarPawn::OnGearChange()
 {
 	if (ExhaustAudioComponent->Sound) {
 	
+		//Gear Change Up
 		if (ChaosWheeledVehicleMovementComponent->GetCurrentGear() > CurrentGear) {
 
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Name: %s"), *ExhaustAudioComponent->GetComponentLocation().ToString()));
+		}
+
+		//Gear change Down
+		if (ChaosWheeledVehicleMovementComponent->GetCurrentGear() < CurrentGear) {
+			
 			//Play Exhaust Pops
 			ExhaustAudioComponent->Play();
-			
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),
-				ExhaustPopParticle,
-				ExhaustAudioComponent->GetComponentLocation(),
-				ExhaustAudioComponent->GetComponentRotation(),
-				FVector(0.2, 0.2, 0.2),
-				true, 
-				EPSCPoolMethod::AutoRelease, 
-				true);
 
-			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Name: %s"), *ExhaustAudioComponent->GetComponentLocation().ToString()));
-			CurrentGear = ChaosWheeledVehicleMovementComponent->GetCurrentGear();
+			UGameplayStatics::SpawnEmitterAttached(ExhaustPopParticle, ExhaustAudioComponent, NAME_None, FVector(0.0f, 0.0f, 0.0f), FRotator(0.f, 0.f, 0.f), FVector(0.2f, 0.2f, 0.2f));
 		}
+
+		if (ChaosWheeledVehicleMovementComponent->GetForwardSpeedMPH() != 0) {
+			ChaosWheeledVehicleMovementComponent->bReverseAsBrake = false;
+		}
+		else {
+			ChaosWheeledVehicleMovementComponent->bReverseAsBrake = true;
+		}
+
+		CurrentGear = ChaosWheeledVehicleMovementComponent->GetCurrentGear();
 	}
 }
 
