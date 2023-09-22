@@ -5,6 +5,7 @@
 #include "Engine/World.h"
 #include "WheeledVehiclePawn.h"
 #include "Kismet/GameplayStatics.h"
+#include <RaceGameInstance.h>
 
 ARaceCarPawn::ARaceCarPawn() {
 

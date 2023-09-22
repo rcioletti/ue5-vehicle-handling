@@ -64,3 +64,18 @@ public:
 	FString MapName;
 
 };
+
+USTRUCT(BlueprintType)
+struct FCarCustomizations : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<ARaceCarPawn> Car;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLinearColor CarColor;
+
+};

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
 #include <RaceCarPawn.h>
+#include <GameStructs.h>
 #include "RaceSaveGame.generated.h"
 /**
  * 
@@ -29,5 +30,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category="Player Stats")
 	TArray<TSubclassOf<ARaceCarPawn>> OwnedCars;
-	
+
+	UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
+	TArray<FCarCustomizations> CarMods;
 };

@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{559556DB-45DE-3B2B-4CE0-DF8DA3BFA8A4}",
+	"EngineAssociation": "{20CBA741-4D0C-8356-CE1D-A5A458F3D6BB}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -11,7 +11,8 @@
 			"AdditionalDependencies": [
 				"ChaosVehicles",
 				"Engine",
-				"CoreUObject"
+				"CoreUObject",
+				"AIModule"
 			]
 		}
 	],
@@ -37,6 +38,10 @@
 		},
 		{
 			"Name": "FMODStudio",
+			"Enabled": true
+		},
+		{
+			"Name": "LearningAgents",
 			"Enabled": true
 		}
 	]

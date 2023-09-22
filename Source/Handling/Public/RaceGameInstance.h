@@ -21,7 +21,7 @@ public:
 	URaceGameInstance();
 
 	UPROPERTY(BlueprintReadOnly)
-	FString SaveGameSlotName = "local_save";
+	FString SaveGameSlotName = "local_save ";
 
 	UPROPERTY(BlueprintReadWrite, Category="Settings")
 	URaceSaveGame* SaveGameObject;
@@ -31,6 +31,12 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Game Manager")
 	void SaveGame();
+
+	UFUNCTION(BlueprintCallable, Category = "Game Manager")
+	void SetCarCustomizations(FCarCustomizations CarMod);
+
+	UFUNCTION(BlueprintCallable, Category = "Game Manager")
+	FCarCustomizations GetCarCustomizations(TSubclassOf<ARaceCarPawn> CarPawnReference);
 
 	UPROPERTY(BlueprintReadWrite, Category="Settings")
 	FName SelectedMap;

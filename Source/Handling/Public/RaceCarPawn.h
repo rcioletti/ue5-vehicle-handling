@@ -40,6 +40,8 @@ public:
 
 	void OnGearChange();
 
+	void ApplyCarMods();
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
 	UParticleSystem* ExhaustPopParticle;
 
