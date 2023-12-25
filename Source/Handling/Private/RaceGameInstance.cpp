@@ -58,11 +58,13 @@ void URaceGameInstance::SetCarCustomizations(FCarCustomizations CarMod)
 
 FCarCustomizations URaceGameInstance::GetCarCustomizations(TSubclassOf<ARaceCarPawn> CarPawnReference)
 {
-	for (int i = 0; i < SaveGameObject->CarMods.Num(); i++) {
-		
-		if (SaveGameObject->CarMods[i].Car == CarPawnReference) {
-		
-			return SaveGameObject->CarMods[i];
+	if (SaveGameObject != NULL) {
+		for (int i = 0; i < SaveGameObject->CarMods.Num(); i++) {
+
+			if (SaveGameObject->CarMods[i].Car == CarPawnReference) {
+
+				return SaveGameObject->CarMods[i];
+			}
 		}
 	}
 

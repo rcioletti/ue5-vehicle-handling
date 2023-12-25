@@ -64,15 +64,17 @@ void ASPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
 	}
 
 	if (AICar) {
-		for (int32 i = 1; i < MaxBots + 1; i++)
-		{
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-			const FVector SpawnLocationBot = AllPlayerStartTransform[i].GetLocation();
-			const FRotator SpawnRotationBot = AllPlayerStartTransform[i].Rotator();
-			ARaceCarPawn* SpawnedBot = Cast<ARaceCarPawn>(GetWorld()->SpawnActor(AICar, &SpawnLocationBot, &SpawnRotationBot, SpawnParams));
-			SpawnedBot->Name = "Bot ";
-			SpawnedBot->Name.Append(FString::FromInt(i));
+		if (AllPlayerStartTransform.Num() == 1 + MaxBots) {
+			for (int32 i = 1; i < MaxBots + 1; i++)
+			{
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+				const FVector SpawnLocationBot = AllPlayerStartTransform[i].GetLocation();
+				const FRotator SpawnRotationBot = AllPlayerStartTransform[i].Rotator();
+				ARaceCarPawn* SpawnedBot = Cast<ARaceCarPawn>(GetWorld()->SpawnActor(AICar, &SpawnLocationBot, &SpawnRotationBot, SpawnParams));
+				SpawnedBot->Name = "Bot ";
+				SpawnedBot->Name.Append(FString::FromInt(i));
+			}
 		}
 	}
 
@@ -98,9 +100,6 @@ TArray<FTransform> ASPRaceGameMode::FindAllPlayerStart()
 
 void ASPRaceGameMode::SortCarPosition()
 {
-	CurrentPosition.Empty();
-
-	int32 Index = 0;
 
 	for (AActor* CarActor : Cars)
 	{
@@ -108,26 +107,44 @@ void ASPRaceGameMode::SortCarPosition()
 
 		USplineComponent* Spline = Path->FindComponentByClass<USplineComponent>();
 
-		CurrentPosition.Add(Spline->FindInputKeyClosestToWorldLocation(Car->GetMesh()->GetComponentLocation()));
-
-		CurrentPosition[Index] = Car->CurrentLap * 20 + CurrentPosition[Index];
-
-		Index++;
+		CarsCurrentPositionInTrack.FindOrAdd(Car) = Spline->FindInputKeyClosestToWorldLocation(Car->GetMesh()->GetComponentLocation()) + Car->CurrentLap * 20;
 	}
 
-	for (int32 i = 0; i < Cars.Num(); i++)
+	CarsCurrentPositionInTrack.ValueSort([](const float& A, const float& B) {
+		return	A > B;
+	});
+
+	int Position = 1;
+
+	for (auto& e : CarsCurrentPositionInTrack)
 	{
-		int32 MaxCarIndex;
-		FMath::Max(CurrentPosition, &MaxCarIndex);
 
-		ARaceCarPawn* FirstCar = Cast<ARaceCarPawn>(Cars[MaxCarIndex]);
-		FirstCar->CurrentPosition = i + 1;
+		e.Key->CurrentPosition = Position;
 
-		//if (GEngine)
-			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("First Car Index %s"), *FString::FromInt(FirstCarIndex)));
-			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Progress %f Position %s Position in Car %s"), FMath::Max(CurrentPosition), *FString::FromInt(i + 1), *FString::FromInt(FirstCar->CurrentPosition)));
-			
-
-		CurrentPosition[MaxCarIndex] = -1.0f;
+		Position++;
 	}
+
+	TArray<ARaceCarPawn*> RaceCars;
+
+	for (auto e : Cars) {
+		ARaceCarPawn* Car = Cast<ARaceCarPawn>(e);
+		RaceCars.Add(Car);
+	}
+
+	CarsOrderedByCurrentPosition = SortAllCarsByPosition(RaceCars);
+}
+
+TArray<ARaceCarPawn*> ASPRaceGameMode::SortAllCarsByPosition(TArray<ARaceCarPawn*> CarsUnordered)
+{
+	TArray<ARaceCarPawn*> CarsOrdered = CarsUnordered;
+
+	CarsOrdered.Sort(ASPRaceGameMode::SortPredicate);
+
+	return CarsOrdered;
+
+}
+
+inline bool ASPRaceGameMode::SortPredicate(const ARaceCarPawn& itemA, const ARaceCarPawn& itemB)
+{
+	return(itemA.CurrentPosition < itemB.CurrentPosition);
 }

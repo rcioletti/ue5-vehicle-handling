@@ -33,6 +33,8 @@ public:
 
 	void SortCarPosition();
 
+	TArray<ARaceCarPawn*> SortAllCarsByPosition(TArray<ARaceCarPawn*>);
+
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	TArray<AActor*> Cars;
 
@@ -47,11 +49,16 @@ public:
 
 	AActor* Path;
 
-	TArray<float> CurrentPosition;
+	TMap<ARaceCarPawn*, float> CarsCurrentPositionInTrack;
+
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	TArray<ARaceCarPawn*> CarsOrderedByCurrentPosition;
 
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	int32 GameLaps;
 
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	int32 MaxBots;
+
+	inline static bool SortPredicate(const ARaceCarPawn& itemA,const ARaceCarPawn& itemB);
 };
