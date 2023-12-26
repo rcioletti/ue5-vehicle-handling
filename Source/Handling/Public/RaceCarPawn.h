@@ -49,28 +49,13 @@ public:
 	UParticleSystem* WheelSmokeParticle;
 
 	UFUNCTION(BLueprintCallable)
-	void ClearTimer();
-
-	UFUNCTION(BLueprintCallable)
 	float GetCurrentBestTime();
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
-	int32 CurrentPosition;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
-	float TimeCounter;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
-	int32 CurrentLap = 1;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
 	FString Name;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
 	float NitrousContent;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
-	TArray<float> LapTimes;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Audio")
 	UAudioComponent* EngineAudioComponent;
@@ -80,5 +65,22 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Audio")
 	UAudioComponent* WheelAudioComponent;
+
+
+	//PlayerInGameStates
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
+	TArray<float> LapTimes;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float LastLapTimeStamp = 0.0f;
+
+	UFUNCTION(BlueprintCallable)
+	void CompletedLap();
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
+	int32 CurrentLap = 1;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
+	int32 CurrentPosition;
 
 };

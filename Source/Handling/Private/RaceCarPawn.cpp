@@ -6,6 +6,8 @@
 #include "WheeledVehiclePawn.h"
 #include "Kismet/GameplayStatics.h"
 #include <RaceGameInstance.h>
+#include <RacePlayerState.h>
+#include <SPRaceGameState.h>
 
 ARaceCarPawn::ARaceCarPawn() {
 
@@ -24,8 +26,6 @@ ARaceCarPawn::ARaceCarPawn() {
 void ARaceCarPawn::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
-	TimeCounter = DeltaSeconds + TimeCounter;
 
 	OnTireSkid();
 	PlayEngineSound();
@@ -115,14 +115,9 @@ void ARaceCarPawn::OnGearChange()
 	}
 }
 
-void ARaceCarPawn::ClearTimer()
-{
-	LapTimes.Add(TimeCounter);
-	TimeCounter = 0.0f;
-}
-
 float ARaceCarPawn::GetCurrentBestTime()
 {
+
 	if (FMath::Min<float>(LapTimes) != NULL)
 	{
 		return FMath::Min<float>(LapTimes);
@@ -130,4 +125,9 @@ float ARaceCarPawn::GetCurrentBestTime()
 	else {
 		return 0.0f;
 	}
+}
+
+void ARaceCarPawn::CompletedLap()
+{
+	CurrentLap++;
 }

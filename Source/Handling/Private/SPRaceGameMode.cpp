@@ -18,13 +18,6 @@ ASPRaceGameMode::ASPRaceGameMode() {
 	//PlayerControllerClass = myControllerClass;
 }
 
-void ASPRaceGameMode::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	SortCarPosition();
-}
-
 void ASPRaceGameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -61,6 +54,8 @@ void ASPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
 		const FRotator SpawnRotation = AllPlayerStartTransform[0].Rotator();
 		ARaceCarPawn* SpawnedPlayerCar = Cast<ARaceCarPawn>(GetWorld()->SpawnActor(PlayerCar, &SpawnLocation, &SpawnRotation, SpawnParams));
 		PlayerController->Possess(SpawnedPlayerCar);
+
+		Cars.Add(SpawnedPlayerCar);
 	}
 
 	if (AICar) {
@@ -74,11 +69,11 @@ void ASPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
 				ARaceCarPawn* SpawnedBot = Cast<ARaceCarPawn>(GetWorld()->SpawnActor(AICar, &SpawnLocationBot, &SpawnRotationBot, SpawnParams));
 				SpawnedBot->Name = "Bot ";
 				SpawnedBot->Name.Append(FString::FromInt(i));
+
+				Cars.Add(SpawnedBot);
 			}
 		}
 	}
-
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARaceCarPawn::StaticClass(), Cars);
 }
 
 TArray<FTransform> ASPRaceGameMode::FindAllPlayerStart()
@@ -96,55 +91,4 @@ TArray<FTransform> ASPRaceGameMode::FindAllPlayerStart()
 	}
 
 	return AllPlayerStartTransform;
-}
-
-void ASPRaceGameMode::SortCarPosition()
-{
-
-	for (AActor* CarActor : Cars)
-	{
-		ARaceCarPawn* Car = Cast<ARaceCarPawn>(CarActor);
-
-		USplineComponent* Spline = Path->FindComponentByClass<USplineComponent>();
-
-		CarsCurrentPositionInTrack.FindOrAdd(Car) = Spline->FindInputKeyClosestToWorldLocation(Car->GetMesh()->GetComponentLocation()) + Car->CurrentLap * 20;
-	}
-
-	CarsCurrentPositionInTrack.ValueSort([](const float& A, const float& B) {
-		return	A > B;
-	});
-
-	int Position = 1;
-
-	for (auto& e : CarsCurrentPositionInTrack)
-	{
-
-		e.Key->CurrentPosition = Position;
-
-		Position++;
-	}
-
-	TArray<ARaceCarPawn*> RaceCars;
-
-	for (auto e : Cars) {
-		ARaceCarPawn* Car = Cast<ARaceCarPawn>(e);
-		RaceCars.Add(Car);
-	}
-
-	CarsOrderedByCurrentPosition = SortAllCarsByPosition(RaceCars);
-}
-
-TArray<ARaceCarPawn*> ASPRaceGameMode::SortAllCarsByPosition(TArray<ARaceCarPawn*> CarsUnordered)
-{
-	TArray<ARaceCarPawn*> CarsOrdered = CarsUnordered;
-
-	CarsOrdered.Sort(ASPRaceGameMode::SortPredicate);
-
-	return CarsOrdered;
-
-}
-
-inline bool ASPRaceGameMode::SortPredicate(const ARaceCarPawn& itemA, const ARaceCarPawn& itemB)
-{
-	return(itemA.CurrentPosition < itemB.CurrentPosition);
 }
