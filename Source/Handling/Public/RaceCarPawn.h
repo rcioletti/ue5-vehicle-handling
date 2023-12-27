@@ -42,6 +42,9 @@ public:
 
 	void ApplyCarMods();
 
+	UFUNCTION(BLueprintCallable)
+	FLinearColor CreateRandomColor();
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
 	UParticleSystem* ExhaustPopParticle;
 

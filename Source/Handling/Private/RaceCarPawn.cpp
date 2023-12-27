@@ -115,6 +115,11 @@ void ARaceCarPawn::OnGearChange()
 	}
 }
 
+FLinearColor ARaceCarPawn::CreateRandomColor()
+{
+	return FLinearColor::MakeRandomColor();
+}
+
 float ARaceCarPawn::GetCurrentBestTime()
 {
 
