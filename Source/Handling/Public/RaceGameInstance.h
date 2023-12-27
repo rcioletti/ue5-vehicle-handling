@@ -38,9 +38,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Game Manager")
 	FCarCustomizations GetCarCustomizations(TSubclassOf<ARaceCarPawn> CarPawnReference);
 
-	UPROPERTY(BlueprintReadWrite, Category="Settings")
+	UPROPERTY(BlueprintReadWrite, Category="Game Settings")
 	FName SelectedMap;
 
-	UPROPERTY(BlueprintReadWrite, Category="Settings")
+	UPROPERTY(BlueprintReadWrite, Category = "Game Settings")
+	int32 NumberOfLaps;
+
+	UPROPERTY(BlueprintReadWrite, Category="Game Settings")
 	TSubclassOf<ARaceCarPawn> SelectedCar;
 };

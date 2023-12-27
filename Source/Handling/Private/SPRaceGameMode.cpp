@@ -28,6 +28,10 @@ void ASPRaceGameMode::BeginPlay()
 		PlayerCar = GameInstance->SelectedCar;
 	}
 
+	if (GameInstance->NumberOfLaps != 0) {
+		GameLaps = GameInstance->NumberOfLaps;
+	}
+
 	TArray<AActor*> PathArray;
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), PathBP, PathArray);
