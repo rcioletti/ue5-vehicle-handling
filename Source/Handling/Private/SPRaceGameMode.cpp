@@ -50,7 +50,7 @@ void ASPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = PlayerController;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		const FVector SpawnLocation = AllPlayerStartTransform[0].GetLocation();
+		const FVector SpawnLocation = AllPlayerStartTransform[0].GetLocation() - FVector(0,0, 90);
 		const FRotator SpawnRotation = AllPlayerStartTransform[0].Rotator();
 		ARaceCarPawn* SpawnedPlayerCar = Cast<ARaceCarPawn>(GetWorld()->SpawnActor(PlayerCar, &SpawnLocation, &SpawnRotation, SpawnParams));
 		PlayerController->Possess(SpawnedPlayerCar);
@@ -64,7 +64,7 @@ void ASPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
 			{
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-				const FVector SpawnLocationBot = AllPlayerStartTransform[i].GetLocation();
+				const FVector SpawnLocationBot = AllPlayerStartTransform[i].GetLocation() - FVector(0, 0, 90);
 				const FRotator SpawnRotationBot = AllPlayerStartTransform[i].Rotator();
 				ARaceCarPawn* SpawnedBot = Cast<ARaceCarPawn>(GetWorld()->SpawnActor(AICar, &SpawnLocationBot, &SpawnRotationBot, SpawnParams));
 				SpawnedBot->Name = "Bot ";

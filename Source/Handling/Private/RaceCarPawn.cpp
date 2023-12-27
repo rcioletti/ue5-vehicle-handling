@@ -32,6 +32,13 @@ void ARaceCarPawn::Tick(float DeltaSeconds)
 	OnGearChange();
 
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Name: %s"), *Name));
+
+	//if (ChaosWheeledVehicleMovementComponent->GetForwardSpeedMPH() != 0) {
+		//ChaosWheeledVehicleMovementComponent->bReverseAsBrake = false;
+	//}
+	//else {
+		//ChaosWheeledVehicleMovementComponent->bReverseAsBrake = true;
+	//}
 }
 
 void ARaceCarPawn::BeginPlay()
@@ -102,13 +109,6 @@ void ARaceCarPawn::OnGearChange()
 			ExhaustAudioComponent->Play();
 
 			UGameplayStatics::SpawnEmitterAttached(ExhaustPopParticle, ExhaustAudioComponent, NAME_None, FVector(0.0f, 0.0f, 0.0f), FRotator(0.f, 0.f, 0.f), FVector(0.2f, 0.2f, 0.2f));
-		}
-
-		if (ChaosWheeledVehicleMovementComponent->GetForwardSpeedMPH() != 0) {
-			ChaosWheeledVehicleMovementComponent->bReverseAsBrake = false;
-		}
-		else {
-			ChaosWheeledVehicleMovementComponent->bReverseAsBrake = true;
 		}
 
 		CurrentGear = ChaosWheeledVehicleMovementComponent->GetCurrentGear();
