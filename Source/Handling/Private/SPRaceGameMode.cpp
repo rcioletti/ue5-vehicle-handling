@@ -73,8 +73,7 @@ void ASPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
 				const FVector SpawnLocationBot = AllPlayerStartTransform[i].GetLocation() - FVector(0, 0, 90);
 				const FRotator SpawnRotationBot = AllPlayerStartTransform[i].Rotator();
 				ARaceCarPawn* SpawnedBot = Cast<ARaceCarPawn>(GetWorld()->SpawnActor(AICar, &SpawnLocationBot, &SpawnRotationBot, SpawnParams));
-				SpawnedBot->Name = "Bot ";
-				SpawnedBot->Name.Append(FString::FromInt(i));
+				SpawnedBot->Name = RandomBotNames[FMath::RandRange(0, RandomBotNames.Num())];
 
 				SpawnedBot->ChaosWheeledVehicleMovementComponent->SetHandbrakeInput(1.0f);
 

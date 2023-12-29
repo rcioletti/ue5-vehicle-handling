@@ -43,6 +43,8 @@ void ASPRaceGameState::SortCarPosition()
 		ARaceCarPawn* Car = Cast<ARaceCarPawn>(CarActor);
 
 		CarsCurrentPositionInTrack.FindOrAdd(Car) = Spline->FindInputKeyClosestToWorldLocation(Car->GetMesh()->GetComponentLocation()) + Car->CurrentLap * 20;
+
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Position: %s"), *FString::FromInt(Spline->FindInputKeyClosestToWorldLocation(Car->GetMesh()->GetComponentLocation()))));
 	}
 
 	CarsCurrentPositionInTrack.ValueSort([](const float& A, const float& B) {
@@ -84,4 +86,14 @@ TArray<ARaceCarPawn*> ASPRaceGameState::SortAllCarsByPosition(TArray<ARaceCarPaw
 inline bool ASPRaceGameState::SortPredicate(const ARaceCarPawn& itemA, const ARaceCarPawn& itemB)
 {
 	return(itemA.CurrentPosition < itemB.CurrentPosition);
+}
+
+void ASPRaceGameState::SetRaceStarted()
+{
+	RaceStartTime = GetServerWorldTimeSeconds();
+}
+
+float ASPRaceGameState::GetRaceTime()
+{
+	return GetServerWorldTimeSeconds() - RaceStartTime;
 }

@@ -86,4 +86,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
 	int32 CurrentPosition;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Stats")
+	bool RaceFinished = false;
+
 };

@@ -35,9 +35,17 @@ private:
 
 	FTimerHandle FuzeTimerHandle;
 
+	float RaceStartTime;
+
 public:
 
 	UPROPERTY(BlueprintReadOnly)
 	TArray<ARaceCarPawn*> CarsOrderedByCurrentPosition;
+
+	UFUNCTION(BlueprintCallable)
+	void SetRaceStarted();
+
+	UFUNCTION(BlueprintPure)
+	float GetRaceTime();
 	
 };
