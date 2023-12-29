@@ -59,6 +59,8 @@ void ASPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
 		ARaceCarPawn* SpawnedPlayerCar = Cast<ARaceCarPawn>(GetWorld()->SpawnActor(PlayerCar, &SpawnLocation, &SpawnRotation, SpawnParams));
 		PlayerController->Possess(SpawnedPlayerCar);
 
+		SpawnedPlayerCar->ChaosWheeledVehicleMovementComponent->SetHandbrakeInput(1.0f);
+
 		Cars.Add(SpawnedPlayerCar);
 	}
 
@@ -73,6 +75,8 @@ void ASPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
 				ARaceCarPawn* SpawnedBot = Cast<ARaceCarPawn>(GetWorld()->SpawnActor(AICar, &SpawnLocationBot, &SpawnRotationBot, SpawnParams));
 				SpawnedBot->Name = "Bot ";
 				SpawnedBot->Name.Append(FString::FromInt(i));
+
+				SpawnedBot->ChaosWheeledVehicleMovementComponent->SetHandbrakeInput(1.0f);
 
 				Cars.Add(SpawnedBot);
 			}

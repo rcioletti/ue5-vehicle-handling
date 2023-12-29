@@ -49,4 +49,7 @@ public:
 
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	int32 MaxBots;
+
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	bool bHasRaceStarted = false;
 };
