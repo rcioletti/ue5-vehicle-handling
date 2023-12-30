@@ -55,5 +55,8 @@ public:
 	int32 MaxBots;
 
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	int32 RacePayout;
+
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	bool bHasRaceStarted = false;
 };

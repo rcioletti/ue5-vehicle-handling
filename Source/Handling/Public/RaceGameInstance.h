@@ -38,11 +38,23 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Game Manager")
 	FCarCustomizations GetCarCustomizations(TSubclassOf<ARaceCarPawn> CarPawnReference);
 
+	UFUNCTION(BlueprintCallable, Category = "Game Manager")
+	void AddMoney(int32 Money);
+
+	UFUNCTION(BlueprintCallable, Category = "Game Manager")
+	void RemoveMoney(int32 Money);
+
+	UFUNCTION(BlueprintCallable, Category = "Game Manager")
+	bool SetNewBestTime(float Time, FString MapName);
+
 	UPROPERTY(BlueprintReadWrite, Category="Game Settings")
 	FName SelectedMap;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Game Settings")
 	int32 NumberOfLaps;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Game Settings")
+	int32 RacePayout;
 
 	UPROPERTY(BlueprintReadWrite, Category="Game Settings")
 	TSubclassOf<ARaceCarPawn> SelectedCar;

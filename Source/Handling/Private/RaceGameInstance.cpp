@@ -70,3 +70,25 @@ FCarCustomizations URaceGameInstance::GetCarCustomizations(TSubclassOf<ARaceCarP
 
 	return FCarCustomizations();
 }
+
+void URaceGameInstance::AddMoney(int32 Money)
+{
+	SaveGameObject->Money += Money;
+}
+
+void URaceGameInstance::RemoveMoney(int32 Money)
+{
+	SaveGameObject->Money -= Money;
+}
+
+bool URaceGameInstance::SetNewBestTime(float Time, FString MapName)
+{
+	if (Time < SaveGameObject->BestLapTime) {
+		
+		SaveGameObject->BestLapTime = Time;
+
+		return true;
+	}
+
+	return false;
+}
