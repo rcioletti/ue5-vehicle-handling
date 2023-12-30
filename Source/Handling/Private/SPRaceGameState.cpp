@@ -42,7 +42,14 @@ void ASPRaceGameState::SortCarPosition()
 	{
 		ARaceCarPawn* Car = Cast<ARaceCarPawn>(CarActor);
 
-		CarsCurrentPositionInTrack.FindOrAdd(Car) = Spline->FindInputKeyClosestToWorldLocation(Car->GetMesh()->GetComponentLocation()) + Car->CurrentLap * 20;
+		//Easy way to handle finished postion but not ideal
+
+		if (Car->RaceFinished) {
+			CarsCurrentPositionInTrack.FindOrAdd(Car) = CarsCurrentPositionInTrack.FindOrAdd(Car) + 20 / Car->CurrentPosition;
+		}
+		else {
+			CarsCurrentPositionInTrack.FindOrAdd(Car) = Spline->FindInputKeyClosestToWorldLocation(Car->GetMesh()->GetComponentLocation()) + Car->CurrentLap * 20;
+		}
 
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Position: %s"), *FString::FromInt(Spline->FindInputKeyClosestToWorldLocation(Car->GetMesh()->GetComponentLocation()))));
 	}
