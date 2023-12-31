@@ -20,6 +20,8 @@ public:
 
 	URaceGameInstance();
 
+	virtual void Init() override;
+
 	UPROPERTY(BlueprintReadOnly)
 	FString SaveGameSlotName = "local_save ";
 
@@ -58,4 +60,23 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category="Game Settings")
 	TSubclassOf<ARaceCarPawn> SelectedCar;
+
+// Level Loading
+
+	UFUNCTION(BlueprintCallable, Category = "Load Screen")
+	void BeginLoadingScreen(const FString& MapName);
+
+	UFUNCTION(BlueprintCallable, Category = "Load Screen")
+	void EndLoadingScreen(UWorld* InLoadedWorld);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Load Screen")
+	TSubclassOf<class UUserWidget> LoadScreenWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Load Screen")
+	bool UseMovies;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Load Screen")
+	TArray<FString> StringPaths;
+
+
 };

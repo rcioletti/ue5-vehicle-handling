@@ -2,11 +2,45 @@
 
 
 #include "RaceGameInstance.h"
+#include <MoviePlayer\Public\MoviePlayer.h>
+#include "Runtime/UMG/Public/UMG.h"
 #include "Kismet/GameplayStatics.h"
 
 URaceGameInstance::URaceGameInstance() {
 
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Game Instance Initialized")));
+	static ConstructorHelpers::FClassFinder<UUserWidget> loadScreenWidgetPath(TEXT("WidgetBlueprint'/Game/UI/UI_LoadScreen.UI_LoadScreen_C'"));
+
+	if (loadScreenWidgetPath.Class != nullptr) { LoadScreenWidget = loadScreenWidgetPath.Class; }
+}
+
+void URaceGameInstance::Init()
+{
+	Super::Init();
+
+	FCoreUObjectDelegates::PreLoadMap.AddUObject(this, &URaceGameInstance::BeginLoadingScreen);
+	FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &URaceGameInstance::EndLoadingScreen);
+}
+
+void URaceGameInstance::BeginLoadingScreen(const FString& MapName)
+{
+	if (!IsRunningDedicatedServer()) {
+		FLoadingScreenAttributes LoadScreenAtt;
+		LoadScreenAtt.bAutoCompleteWhenLoadingCompletes = false;
+
+		if (UseMovies) {
+			LoadScreenAtt.MoviePaths = StringPaths;
+		}
+
+		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), LoadScreenWidget);
+		LoadScreenAtt.WidgetLoadingScreen = Widget->TakeWidget();
+
+		GetMoviePlayer()->SetupLoadingScreen(LoadScreenAtt);
+	}
+}
+
+void URaceGameInstance::EndLoadingScreen(UWorld* InLoadedWorld)
+{
 }
 
 void URaceGameInstance::LoadGame()
