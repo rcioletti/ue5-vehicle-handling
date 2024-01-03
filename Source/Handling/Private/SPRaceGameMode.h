@@ -24,9 +24,12 @@ class HANDLING_API ASPRaceGameMode : public AGameModeBase
 
 	TArray<AActor*> AllPlayerStartActor;
 
-	TArray<FString> RandomBotNames = {TEXT("Kazuya"),TEXT("Aoki"),TEXT("Ogawa"),TEXT("Kazama"),TEXT("Oshima"),TEXT("Nishizawa"),TEXT("Noda"),TEXT("Nobunaga"),TEXT("Matsuda"),
-		TEXT("Mitsui"),TEXT("Hattori"),TEXT("Hane"),TEXT("Hoshino"),TEXT("Yoshi"),TEXT("Miura"),TEXT("Suzuki"),TEXT("Sato"),TEXT("Tajima"),TEXT("Tachikawa"),TEXT("Takashi"),
-		TEXT("Nakajima"), TEXT("Nagasaka"),TEXT("Mihara"),TEXT("Ohara"),TEXT("Nakaya"),TEXT("Nakayama"),TEXT("Sasaki"),TEXT("Kotaka"),TEXT("Kogure"),TEXT("Kurosawa"), TEXT("Koyama") };
+	TArray<FString> RandomBotNames = {TEXT("Kazuya"),TEXT("Aoki"),TEXT("Ogawa"),TEXT("Kazama"),
+		TEXT("Oshima"),TEXT("Nishizawa"),TEXT("Noda"),TEXT("Nobunaga"),TEXT("Matsuda"),
+		TEXT("Mitsui"),TEXT("Hattori"),TEXT("Hane"),TEXT("Hoshino"),TEXT("Yoshi"),TEXT("Miura"),
+		TEXT("Suzuki"),TEXT("Sato"),TEXT("Tajima"),TEXT("Tachikawa"),TEXT("Takashi"),
+		TEXT("Nakajima"), TEXT("Nagasaka"),TEXT("Mihara"),TEXT("Ohara"),TEXT("Nakaya"),
+		TEXT("Nakayama"),TEXT("Sasaki"),TEXT("Kotaka"),TEXT("Kogure"),TEXT("Kurosawa"), TEXT("Koyama") };
 
 public:
 
@@ -59,4 +62,7 @@ public:
 
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	bool bHasRaceStarted = false;
+
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	bool isTimeTrial;
 };

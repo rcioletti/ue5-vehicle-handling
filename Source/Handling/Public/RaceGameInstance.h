@@ -61,6 +61,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category="Game Settings")
 	TSubclassOf<ARaceCarPawn> SelectedCar;
 
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	bool isTimeTrial;
+
 // Level Loading
 
 	UFUNCTION(BlueprintCallable, Category = "Load Screen")
@@ -77,6 +80,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Load Screen")
 	TArray<FString> StringPaths;
-
-
 };
