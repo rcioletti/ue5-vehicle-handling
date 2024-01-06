@@ -15,4 +15,10 @@ class HANDLING_API AMPRaceGameMode : public AGameMode
 	GENERATED_BODY()
 
 	AMPRaceGameMode();
+
+	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
+
+public:
+	UPROPERTY(Replicated, BlueprintReadWrite)
+	bool isWaitingPlayers = false;
 };

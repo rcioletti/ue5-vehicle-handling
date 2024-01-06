@@ -5,8 +5,12 @@
 #include <MoviePlayer\Public\MoviePlayer.h>
 #include "Runtime/UMG/Public/UMG.h"
 #include "Kismet/GameplayStatics.h"
+#include <OnlineSubsystem.h>
 
 URaceGameInstance::URaceGameInstance() {
+
+	OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &URaceGameInstance::OnCreateSessionComplete);
+	OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &URaceGameInstance::OnStartOnlineGameComplete);
 
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Game Instance Initialized")));
 	static ConstructorHelpers::FClassFinder<UUserWidget> loadScreenWidgetPath(TEXT("WidgetBlueprint'/Game/UI/UI_LoadScreen.UI_LoadScreen_C'"));
@@ -20,6 +24,58 @@ void URaceGameInstance::Init()
 
 	FCoreUObjectDelegates::PreLoadMap.AddUObject(this, &URaceGameInstance::BeginLoadingScreen);
 	FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &URaceGameInstance::EndLoadingScreen);
+}
+
+bool URaceGameInstance::HostSession(FName SessionName, bool bIsLAN)
+{
+	IOnlineSubsystem* const OnlineSub = IOnlineSubsystem::Get();
+
+	if (OnlineSub)
+	{
+		IOnlineSessionPtr Sessions = OnlineSub->GetSessionInterface();
+
+		if (Sessions.IsValid())
+		{
+			TSharedRef<FOnlineSessionSettings> SessionSettings = MakeShared<FOnlineSessionSettings>();
+
+			SessionSettings->bIsLANMatch = bIsLAN;
+			SessionSettings->bUsesPresence = true;
+			SessionSettings->NumPublicConnections = 4;
+			SessionSettings->NumPrivateConnections = 0;
+			SessionSettings->bAllowInvites = true;
+			SessionSettings->bAllowJoinInProgress = true;
+			SessionSettings->bShouldAdvertise = true;
+			SessionSettings->bAllowJoinViaPresence = true;
+			SessionSettings->bAllowJoinViaPresenceFriendsOnly = false;
+
+			SessionSettings->Settings.Add(
+				FName(TEXT("New Race")),
+				FOnlineSessionSetting(FString(TEXT("SettingValue")), EOnlineDataAdvertisementType::ViaOnlineService));
+
+			OnCreateSessionCompleteDelegateHandle = Sessions->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
+
+			FUniqueNetIdRepl NetID = GetFirstLocalPlayerController(GetWorld())->GetLocalPlayer()->GetPreferredUniqueNetId();
+
+			if (NetID.IsValid()) {
+
+				return Sessions->CreateSession(*NetID, SessionName, *SessionSettings);
+			}
+		}
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, TEXT("No OnlineSubsytem found!"));
+	}
+
+	return false;
+}
+
+void URaceGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
+{
+}
+
+void URaceGameInstance::OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful)
+{
 }
 
 void URaceGameInstance::BeginLoadingScreen(const FString& MapName)

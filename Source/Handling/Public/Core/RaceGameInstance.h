@@ -7,6 +7,8 @@
 #include <Core/RaceSaveGame.h>
 #include <Player/RaceCarPawn.h>
 #include <Core/GameData.h>
+#include "Interfaces/OnlineSessionInterface.h"
+#include "OnlineSessionSettings.h"
 #include "RaceGameInstance.generated.h"
 
 /**
@@ -65,6 +67,19 @@ public:
 
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	EGameType Type;
+
+	UFUNCTION(BlueprintCallable, Category = "Online Manager")
+	bool HostSession(FName SessionName, bool bIsLAN);
+
+	FOnCreateSessionCompleteDelegate OnCreateSessionCompleteDelegate;
+	FOnStartSessionCompleteDelegate OnStartSessionCompleteDelegate;
+
+	FDelegateHandle OnCreateSessionCompleteDelegateHandle;
+	FDelegateHandle OnStartSessionCompleteDelegateHandle;
+
+	virtual void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
+	void OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful);
+
 
 // Level Loading
 
