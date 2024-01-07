@@ -16,3 +16,30 @@ void AMPRaceGameMode::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& Ou
 {
 	DOREPLIFETIME(AMPRaceGameMode, isWaitingPlayers);
 }
+
+void AMPRaceGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::OnPostLogin(NewPlayer);
+
+    FUniqueNetIdRepl UniqueNetIdRepl;
+    if (NewPlayer->IsLocalPlayerController())
+    {
+        ULocalPlayer* LocalPlayer = NewPlayer->GetLocalPlayer();
+        if (IsValid(LocalPlayer))
+        {
+            UniqueNetIdRepl = LocalPlayer->GetPreferredUniqueNetId();
+        }
+        else
+        {
+            UNetConnection* RemoteNetConnection = Cast<UNetConnection>(NewPlayer->Player);
+            check(IsValid(RemoteNetConnection));
+            UniqueNetIdRepl = RemoteNetConnection->PlayerId;
+        }
+    }
+    else
+    {
+        UNetConnection* RemoteNetConnection = Cast<UNetConnection>(NewPlayer->Player);
+        check(IsValid(RemoteNetConnection));
+        UniqueNetIdRepl = RemoteNetConnection->PlayerId;
+    }
+}
