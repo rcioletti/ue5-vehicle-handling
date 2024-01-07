@@ -17,29 +17,37 @@ void AMPRaceGameMode::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& Ou
 	DOREPLIFETIME(AMPRaceGameMode, isWaitingPlayers);
 }
 
-void AMPRaceGameMode::PostLogin(APlayerController* NewPlayer)
-{
-	Super::OnPostLogin(NewPlayer);
-
-    FUniqueNetIdRepl UniqueNetIdRepl;
-    if (NewPlayer->IsLocalPlayerController())
-    {
-        ULocalPlayer* LocalPlayer = NewPlayer->GetLocalPlayer();
-        if (IsValid(LocalPlayer))
-        {
-            UniqueNetIdRepl = LocalPlayer->GetPreferredUniqueNetId();
-        }
-        else
-        {
-            UNetConnection* RemoteNetConnection = Cast<UNetConnection>(NewPlayer->Player);
-            check(IsValid(RemoteNetConnection));
-            UniqueNetIdRepl = RemoteNetConnection->PlayerId;
-        }
-    }
-    else
-    {
-        UNetConnection* RemoteNetConnection = Cast<UNetConnection>(NewPlayer->Player);
-        check(IsValid(RemoteNetConnection));
-        UniqueNetIdRepl = RemoteNetConnection->PlayerId;
-    }
-}
+//void AMPRaceGameMode::PostLogin(APlayerController* NewPlayer)
+//{
+//	Super::OnPostLogin(NewPlayer);
+//
+//    FUniqueNetIdRepl UniqueNetIdRepl;
+//    if (NewPlayer->IsLocalPlayerController())
+//    {
+//        ULocalPlayer* LocalPlayer = NewPlayer->GetLocalPlayer();
+//        if (IsValid(LocalPlayer))
+//        {
+//            UniqueNetIdRepl = LocalPlayer->GetPreferredUniqueNetId();
+//
+//            GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Valid Local Player netid")));
+//        }
+//        else
+//        {
+//            UNetConnection* RemoteNetConnection = Cast<UNetConnection>(NewPlayer->Player);
+//            check(IsValid(RemoteNetConnection));
+//            UniqueNetIdRepl = RemoteNetConnection->PlayerId;
+//
+//            GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Not Valid Local Player netid")));
+//        }
+//    }
+//    else
+//    {
+//        UNetConnection* RemoteNetConnection = Cast<UNetConnection>(NewPlayer->Player);
+//        check(IsValid(RemoteNetConnection));
+//        UniqueNetIdRepl = RemoteNetConnection->PlayerId;
+//
+//        GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Not Locally Controlled")));
+//    }
+//
+//    GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("New Player loggedIN")));
+//}
