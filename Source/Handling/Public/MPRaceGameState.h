@@ -14,4 +14,7 @@ class HANDLING_API AMPRaceGameState : public AGameState
 {
 	GENERATED_BODY()
 	
+	bool inLobby;
+
+	bool inRace;
 };
