@@ -16,11 +16,10 @@ class HANDLING_API AMPRaceGameMode : public AGameMode
 
 	AMPRaceGameMode();
 
-	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
-
-	//virtual void PostLogin(APlayerController* NewPlayer) override;
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 
 public:
-	UPROPERTY(Replicated, BlueprintReadWrite)
-	bool isWaitingPlayers = false;
+
+	UPROPERTY(BlueprintReadWrite)
+	TArray<APlayerController*> Players;
 };

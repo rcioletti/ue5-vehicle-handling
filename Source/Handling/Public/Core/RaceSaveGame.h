@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
 #include <Player/RaceCarPawn.h>
-#include <Core/GameStructs.h>
+#include <Core/GameData.h>
 #include "RaceSaveGame.generated.h"
 /**
  * 

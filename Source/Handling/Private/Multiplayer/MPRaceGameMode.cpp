@@ -3,6 +3,7 @@
 
 #include "Multiplayer/MPRaceGameMode.h"
 #include <Net\UnrealNetwork.h>
+#include <Multiplayer\MPRaceGameState.h>
 
 AMPRaceGameMode::AMPRaceGameMode() {
 
@@ -12,42 +13,41 @@ AMPRaceGameMode::AMPRaceGameMode() {
 	bReplicates = true;
 }
 
-void AMPRaceGameMode::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+void AMPRaceGameMode::PostLogin(APlayerController* NewPlayer)
 {
-	DOREPLIFETIME(AMPRaceGameMode, isWaitingPlayers);
-}
+	Super::PostLogin(NewPlayer);
 
-//void AMPRaceGameMode::PostLogin(APlayerController* NewPlayer)
-//{
-//	Super::OnPostLogin(NewPlayer);
-//
-//    FUniqueNetIdRepl UniqueNetIdRepl;
-//    if (NewPlayer->IsLocalPlayerController())
-//    {
-//        ULocalPlayer* LocalPlayer = NewPlayer->GetLocalPlayer();
-//        if (IsValid(LocalPlayer))
-//        {
-//            UniqueNetIdRepl = LocalPlayer->GetPreferredUniqueNetId();
-//
-//            GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Valid Local Player netid")));
-//        }
-//        else
-//        {
-//            UNetConnection* RemoteNetConnection = Cast<UNetConnection>(NewPlayer->Player);
-//            check(IsValid(RemoteNetConnection));
-//            UniqueNetIdRepl = RemoteNetConnection->PlayerId;
-//
-//            GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Not Valid Local Player netid")));
-//        }
-//    }
-//    else
-//    {
-//        UNetConnection* RemoteNetConnection = Cast<UNetConnection>(NewPlayer->Player);
-//        check(IsValid(RemoteNetConnection));
-//        UniqueNetIdRepl = RemoteNetConnection->PlayerId;
-//
-//        GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Not Locally Controlled")));
-//    }
-//
-//    GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("New Player loggedIN")));
-//}
+    AMPRaceGameState* MPGameState = GetWorld()->GetGameState<AMPRaceGameState>();
+
+    MPGameState->LastAddedPlayer = Players.Add(NewPlayer);
+
+    MPGameState->OnRep_LastAddedPlayer();
+
+    /*FUniqueNetIdRepl UniqueNetIdRepl;
+    if (NewPlayer->IsLocalPlayerController())
+    {
+        ULocalPlayer* LocalPlayer = NewPlayer->GetLocalPlayer();
+        if (IsValid(LocalPlayer))
+        {
+            UniqueNetIdRepl = LocalPlayer->GetPreferredUniqueNetId();
+
+            GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Valid Local Player netid")));
+        }
+        else
+        {
+            UNetConnection* RemoteNetConnection = Cast<UNetConnection>(NewPlayer->Player);
+            check(IsValid(RemoteNetConnection));
+            UniqueNetIdRepl = RemoteNetConnection->PlayerId;
+
+            GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Not Valid Local Player netid")));
+        }
+    }
+    else
+    {
+        UNetConnection* RemoteNetConnection = Cast<UNetConnection>(NewPlayer->Player);
+        check(IsValid(RemoteNetConnection));
+        UniqueNetIdRepl = RemoteNetConnection->PlayerId;
+
+        GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Not Locally Controlled")));
+    }*/
+}
