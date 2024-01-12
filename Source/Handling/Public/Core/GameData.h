@@ -14,7 +14,7 @@ enum class EGameType : uint8 {
 };
 
 USTRUCT(BlueprintType)
-struct FCars : public FTableRowBase
+struct FCarData : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -36,49 +36,49 @@ public:
 	FName CarMakeName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Car Data")
-	int32 Power;
+	int32 Power = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Car Data")
-	int32 Torque;
+	int32 Torque = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Car Data")
-	int32 TopSpeed;
+	int32 TopSpeed = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Car Data")
-	int32 Acceleration;
+	int32 Acceleration = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Car Data")
-	int32 Price;
+	int32 Price = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Car Data")
-	int32 Weigth;
+	int32 Weigth = 0;
 
 };
 
 USTRUCT(BlueprintType)
-struct FMaps : public FTableRowBase
+struct FMapData : public FTableRowBase
 {
 	GENERATED_BODY()
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map Data")
 	FName Name;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map Data")
 	UTexture2D* MapThumbnail;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map Data")
 	FString MapName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 MinLaps;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map Data")
+	int32 MinLaps = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 MaxLaps;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map Data")
+	int32 MaxLaps = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 LapPayout;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map Data")
+	int32 LapPayout = 0;
 
 };
 
@@ -93,7 +93,7 @@ public:
 	TSubclassOf<ARaceCarPawn> Car;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FLinearColor CarColor;
+	FLinearColor CarColor = FLinearColor::Black;
 
 };
 
@@ -108,8 +108,8 @@ public:
 
 	static UGameData* GetInstance();
 
-	TArray<FMaps*> GetMaps();
-	TArray<FCars*> GetCars();
+	TArray<FMapData*> GetMaps();
+	TArray<FCarData*> GetCars();
 
 	UDataTable* GetMapsTable() { return MapsTable; }
 	void SetMapsTable(UDataTable* DataTableBP) { MapsTable = DataTableBP; }
@@ -118,7 +118,7 @@ public:
 	void SetCarsTable(UDataTable* DataTableBP) { CarsTable = DataTableBP; }
 
 private:
-	inline static UGameData* INSTANCE;
+	static UGameData* INSTANCE;
 	UDataTable* MapsTable;
 	UDataTable* CarsTable;
 };

@@ -1,14 +1,16 @@
 #include "Core/GameData.h"
 
+UGameData* UGameData::INSTANCE;
+
 UGameData::UGameData()
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable>
-		MapsTable_BP(TEXT("DataTable'/Game/Data/DT_Map.DT_Map'"));
+		MapsTable_BP(TEXT("DataTable'/Game/Data/DT_MapData.DT_MapData'"));
 
 	SetMapsTable(MapsTable_BP.Object);
 
 	static ConstructorHelpers::FObjectFinder<UDataTable>
-		CarsTable_BP(TEXT("DataTable'/Game/Data/DT_Car.DT_Car'"));
+		CarsTable_BP(TEXT("DataTable'/Game/Data/DT_CarData.DT_CarData'"));
 
 	SetCarsTable(CarsTable_BP.Object);
 }
@@ -24,16 +26,16 @@ UGameData* UGameData::GetInstance()
 	return INSTANCE;
 }
 
-TArray<FMaps*> UGameData::GetMaps()
+TArray<FMapData*> UGameData::GetMaps()
 {
-	TArray<FMaps*> Maps;
-	GetMapsTable()->GetAllRows<FMaps>(TEXT("Test"), Maps);
+	TArray<FMapData*> Maps;
+	GetMapsTable()->GetAllRows<FMapData>(TEXT("Test"), Maps);
 	return Maps;
 }
 
-TArray<FCars*> UGameData::GetCars()
+TArray<FCarData*> UGameData::GetCars()
 {
-	TArray<FCars*> Cars;
-	GetMapsTable()->GetAllRows<FCars>(TEXT("Test"), Cars);
+	TArray<FCarData*> Cars;
+	GetCarsTable()->GetAllRows<FCarData>(TEXT("Test"), Cars);
 	return Cars;
 }

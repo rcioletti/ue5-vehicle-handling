@@ -25,17 +25,12 @@ void AMPRaceGameState::UpdateAllDisplayedCars()
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), BPCarShowcase, AllCarShowcaseInWorld);
 
-	//FCars* CarData = UGameData::GetInstance()->GetCars()[0];
+	TArray<FCarData*> CarData = UGameData::GetInstance()->GetCars();
 
-	for (auto* lol : UGameData::GetInstance()->GetCars()) {
-
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Car: %s"), *lol->CarModelName.ToString()));
-	}
-
-	if (!AllCarShowcaseInWorld.IsEmpty() /** && CarData != nullptr**/) {
+	if (!AllCarShowcaseInWorld.IsEmpty()) {
 		for (int i = 0; i <= LastAddedPlayer; i++) {
 
-			UpdateDisplayedCar(AllCarShowcaseInWorld[i]->GetComponentByClass<USkeletalMeshComponent>(), nullptr);
+			UpdateDisplayedCar(AllCarShowcaseInWorld[i]->GetComponentByClass<USkeletalMeshComponent>(), CarData[0]->CarSkeletalMesh);
 			
 		}
 	}

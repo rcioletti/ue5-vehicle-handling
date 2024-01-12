@@ -4,6 +4,7 @@
 #include "Multiplayer/MPRaceGameMode.h"
 #include <Net\UnrealNetwork.h>
 #include <Multiplayer\MPRaceGameState.h>
+#include <Multiplayer\LobbyPlayerController.h>
 
 AMPRaceGameMode::AMPRaceGameMode() {
 
@@ -19,8 +20,13 @@ void AMPRaceGameMode::PostLogin(APlayerController* NewPlayer)
 
     AMPRaceGameState* MPGameState = GetWorld()->GetGameState<AMPRaceGameState>();
 
-    MPGameState->LastAddedPlayer = Players.Add(NewPlayer);
+    int32 ServerIndex = Players.Add(NewPlayer);
+    
+    ALobbyPlayerController* PC = Cast<ALobbyPlayerController>(NewPlayer);
 
+    PC->ServerIndex = ServerIndex;
+
+    MPGameState->LastAddedPlayer = ServerIndex;
     MPGameState->OnRep_LastAddedPlayer();
 
     /*FUniqueNetIdRepl UniqueNetIdRepl;
