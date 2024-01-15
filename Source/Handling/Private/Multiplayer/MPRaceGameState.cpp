@@ -5,6 +5,7 @@
 #include <Engine.h>
 #include <Core\GameData.h>
 #include <Net\UnrealNetwork.h>
+#include <Core\RaceGameInstance.h>
 
 void AMPRaceGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
 {
@@ -25,7 +26,9 @@ void AMPRaceGameState::UpdateAllDisplayedCars()
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), BPCarShowcase, AllCarShowcaseInWorld);
 
-	TArray<FCarData*> CarData = UGameData::GetInstance()->GetCars();
+	URaceGameInstance* GI = Cast<URaceGameInstance>(GetGameInstance());
+
+	TArray<FCarData*> CarData = GI->GetGameData()->GetCars();
 
 	if (!AllCarShowcaseInWorld.IsEmpty()) {
 		for (int i = 0; i <= LastAddedPlayer; i++) {

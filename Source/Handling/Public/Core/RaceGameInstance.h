@@ -26,6 +26,8 @@ public:
 
 	virtual void Init() override;
 
+	virtual void Shutdown() override;
+
 	UPROPERTY(BlueprintReadOnly)
 	FString SaveGameSlotName = "local_save ";
 
@@ -67,6 +69,12 @@ public:
 
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	EGameType Type;
+
+	UFUNCTION(BlueprintPure, Category = "Persistence")
+	UGameData* GetGameData();
+
+	UPROPERTY(Transient)
+	UGameData* GameDataInstance;
 
 	UFUNCTION(BlueprintCallable, Category = "Online Manager")
 	bool HostSession(FName SessionName, bool bIsLAN);

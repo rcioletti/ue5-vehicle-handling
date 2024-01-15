@@ -26,15 +26,29 @@ void URaceGameInstance::Init()
 	FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &URaceGameInstance::EndLoadingScreen);
 }
 
+void URaceGameInstance::Shutdown()
+{
+	Super::Shutdown();
+
+	if (IsValid(GameDataInstance)) {
+		GameDataInstance->ConditionalBeginDestroy();
+	}
+}
+
+UGameData* URaceGameInstance::GetGameData()
+{
+	return IsValid(GameDataInstance) ? GameDataInstance : GameDataInstance = NewObject<UGameData>(this, FName("GameData"));
+}
+
 bool URaceGameInstance::HostSession(FName SessionName, bool bIsLAN)
 {
 	IOnlineSubsystem* const OnlineSub = IOnlineSubsystem::Get();
 
 	if (OnlineSub)
 	{
-		IOnlineSessionPtr Sessions = OnlineSub->GetSessionInterface();
+		IOnlineSessionPtr Session = OnlineSub->GetSessionInterface();
 
-		if (Sessions.IsValid())
+		if (Session.IsValid())
 		{
 			TSharedRef<FOnlineSessionSettings> SessionSettings = MakeShared<FOnlineSessionSettings>();
 
@@ -52,13 +66,13 @@ bool URaceGameInstance::HostSession(FName SessionName, bool bIsLAN)
 				FName(TEXT("New Race")),
 				FOnlineSessionSetting(FString(TEXT("SettingValue")), EOnlineDataAdvertisementType::ViaOnlineService));
 
-			OnCreateSessionCompleteDelegateHandle = Sessions->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
+			OnCreateSessionCompleteDelegateHandle = Session->AddOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegate);
 
 			FUniqueNetIdRepl NetID = GetFirstLocalPlayerController(GetWorld())->GetLocalPlayer()->GetPreferredUniqueNetId();
 
 			if (NetID.IsValid()) {
 
-				return Sessions->CreateSession(*NetID, SessionName, *SessionSettings);
+				return Session->CreateSession(*NetID, SessionName, *SessionSettings);
 			}
 		}
 	}
@@ -72,6 +86,17 @@ bool URaceGameInstance::HostSession(FName SessionName, bool bIsLAN)
 
 void URaceGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
 {
+
+	IOnlineSubsystem* const OnlineSub = IOnlineSubsystem::Get();
+
+	if (OnlineSub)
+	{
+		const IOnlineSessionPtr Session = OnlineSub->GetSessionInterface();
+		if (Session)
+		{
+			Session->ClearOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegateHandle);
+		}
+	}
 }
 
 void URaceGameInstance::OnStartOnlineGameComplete(FName SessionName, bool bWasSuccessful)

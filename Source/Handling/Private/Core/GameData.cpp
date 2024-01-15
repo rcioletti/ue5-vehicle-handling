@@ -1,7 +1,5 @@
 #include "Core/GameData.h"
 
-UGameData* UGameData::INSTANCE;
-
 UGameData::UGameData()
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable>
@@ -15,27 +13,16 @@ UGameData::UGameData()
 	SetCarsTable(CarsTable_BP.Object);
 }
 
-
-UGameData* UGameData::GetInstance()
-{
-	if (INSTANCE == nullptr)
-	{
-		INSTANCE = NewObject<UGameData>();
-	}
-
-	return INSTANCE;
-}
-
 TArray<FMapData*> UGameData::GetMaps()
 {
 	TArray<FMapData*> Maps;
-	GetMapsTable()->GetAllRows<FMapData>(TEXT("Test"), Maps);
+	GetMapsTable()->GetAllRows<FMapData>(TEXT("Maps"), Maps);
 	return Maps;
 }
 
 TArray<FCarData*> UGameData::GetCars()
 {
 	TArray<FCarData*> Cars;
-	GetCarsTable()->GetAllRows<FCarData>(TEXT("Test"), Cars);
+	GetCarsTable()->GetAllRows<FCarData>(TEXT("Cars"), Cars);
 	return Cars;
 }

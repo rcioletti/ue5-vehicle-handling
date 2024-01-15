@@ -106,8 +106,6 @@ public:
 
 	UGameData();
 
-	static UGameData* GetInstance();
-
 	TArray<FMapData*> GetMaps();
 	TArray<FCarData*> GetCars();
 
@@ -118,7 +116,6 @@ public:
 	void SetCarsTable(UDataTable* DataTableBP) { CarsTable = DataTableBP; }
 
 private:
-	static UGameData* INSTANCE;
 	UDataTable* MapsTable;
 	UDataTable* CarsTable;
 };
