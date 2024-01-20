@@ -24,16 +24,22 @@ public:
 	UPROPERTY()
 	TArray<AActor*> AllCarShowcaseInWorld;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LastAddedPlayer)
-	int32 LastAddedPlayer;
+	//UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LastAddedPlayer)
+	//int32 LastAddedPlayer;
 
-	UFUNCTION()
-	void OnRep_LastAddedPlayer();
+	UPROPERTY(BlueprintReadOnly)
+	TMap<APlayerController*, int32> SelectedCar;
+
+	//UFUNCTION()
+	//void OnRep_LastAddedPlayer();
+
+	UFUNCTION(BlueprintCallable)
+	void SetNewCarIndex(bool isAdding, APlayerController* PC);
 
 	UFUNCTION()
 	void UpdateAllDisplayedCars();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void UpdateDisplayedCar(USkeletalMeshComponent* CarShowcaseSkeletalMeshComponent, USkeletalMesh* CarSkeletalMesh);
 
 private:

@@ -18,5 +18,11 @@ class HANDLING_API ALobbyPlayerController : public APlayerController
 public:
 
 	UPROPERTY(BlueprintReadOnly)
-	int32 ServerIndex;
+	int32 PlayerID;
+
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void Server_SetPlayerID(int32 ID);
+
+	UFUNCTION(BlueprintCallable, Client, Reliable)
+	void Client_SetPlayerID(int32 ID);
 };
