@@ -21,26 +21,14 @@ public:
 	UPROPERTY(BlueprintReadWRite, EditAnywhere)
 	TSubclassOf<AActor> BPCarShowcase;
 
-	UPROPERTY()
-	TArray<AActor*> AllCarShowcaseInWorld;
-
 	//UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LastAddedPlayer)
 	//int32 LastAddedPlayer;
 
 	UPROPERTY(BlueprintReadOnly)
 	TMap<APlayerController*, int32> SelectedCar;
 
-	//UFUNCTION()
-	//void OnRep_LastAddedPlayer();
-
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void SetNewCarIndex(bool isAdding, APlayerController* PC);
-
-	UFUNCTION()
-	void UpdateAllDisplayedCars();
-
-	UFUNCTION(BlueprintCallable)
-	void UpdateDisplayedCar(USkeletalMeshComponent* CarShowcaseSkeletalMeshComponent, USkeletalMesh* CarSkeletalMesh);
 
 private:
 
