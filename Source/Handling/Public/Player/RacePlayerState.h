@@ -13,7 +13,16 @@ UCLASS()
 class HANDLING_API ARacePlayerState : public APlayerState
 {
 	GENERATED_BODY()
+
+	ARacePlayerState();
 	
+	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
+
 public:
-	
+
+	UPROPERTY(BlueprintReadOnly, Replicated)
+	int32 SelectedCarIndex = 0;
+
+	UPROPERTY(BlueprintReadOnly, Replicated)
+	bool isReady = false;
 };

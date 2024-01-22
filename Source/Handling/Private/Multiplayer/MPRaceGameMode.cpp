@@ -5,6 +5,7 @@
 #include <Net\UnrealNetwork.h>
 #include <Multiplayer\MPRaceGameState.h>
 #include <Multiplayer\LobbyPlayerController.h>
+#include <Player\RacePlayerState.h>
 
 AMPRaceGameMode::AMPRaceGameMode() {
 
@@ -24,32 +25,33 @@ void AMPRaceGameMode::PostLogin(APlayerController* NewPlayer)
 
     PC->Server_SetPlayerID(ServerIndex);
     PC->Server_DisplayCarInLobby(0);
+}
 
-    /*FUniqueNetIdRepl UniqueNetIdRepl;
-    if (NewPlayer->IsLocalPlayerController())
-    {
-        ULocalPlayer* LocalPlayer = NewPlayer->GetLocalPlayer();
-        if (IsValid(LocalPlayer))
-        {
-            UniqueNetIdRepl = LocalPlayer->GetPreferredUniqueNetId();
+void AMPRaceGameMode::OpenRaceLevel()
+{
+	UWorld* World = GetWorld();
+	bUseSeamlessTravel = true;
+	World->ServerTravel("/Game/Maps/RaceTrack?listen");
+}
 
-            GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Valid Local Player netid")));
-        }
-        else
-        {
-            UNetConnection* RemoteNetConnection = Cast<UNetConnection>(NewPlayer->Player);
-            check(IsValid(RemoteNetConnection));
-            UniqueNetIdRepl = RemoteNetConnection->PlayerId;
+void AMPRaceGameMode::CheckEveryoneReady()
+{
+	bool EveryoneReady = false;
 
-            GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Not Valid Local Player netid")));
-        }
-    }
-    else
-    {
-        UNetConnection* RemoteNetConnection = Cast<UNetConnection>(NewPlayer->Player);
-        check(IsValid(RemoteNetConnection));
-        UniqueNetIdRepl = RemoteNetConnection->PlayerId;
+	for (int i = 1; i < Players.Num(); i++) {
+		ALobbyPlayerController* PC = Cast<ALobbyPlayerController>(Players[i]);
+		ARacePlayerState* PS = Cast<ARacePlayerState>(PC->PlayerState);
 
-        GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Not Locally Controlled")));
-    }*/
+		if (PS->isReady) {
+			EveryoneReady = true;
+		}
+		else {
+			EveryoneReady = false;
+			break;
+		}
+	}
+
+	if (EveryoneReady) {
+		OpenRaceLevel();
+	}
 }

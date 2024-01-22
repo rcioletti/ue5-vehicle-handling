@@ -22,4 +22,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	TArray<APlayerController*> Players;
+
+	UFUNCTION(BlueprintCallable)
+	void OpenRaceLevel();
+
+	UFUNCTION(BlueprintCallable)
+	void CheckEveryoneReady();
 };

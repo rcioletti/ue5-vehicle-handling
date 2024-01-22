@@ -6,11 +6,13 @@
 #include <Multiplayer\LobbyShowcaseCar.h>
 #include <Kismet\GameplayStatics.h>
 #include <Multiplayer\MPRaceGameState.h>
+#include <Multiplayer\MPRaceGameMode.h>
+#include <Player\RacePlayerState.h>
+
 
 void ALobbyPlayerController::Server_SetPlayerID_Implementation(int32 ID)
 {
 	PlayerID = ID;
-	Client_SetPlayerID(ID);
 }
 
 void ALobbyPlayerController::Client_SetPlayerID_Implementation(int32 ID)
@@ -18,9 +20,18 @@ void ALobbyPlayerController::Client_SetPlayerID_Implementation(int32 ID)
 	PlayerID = ID;
 }
 
-void ALobbyPlayerController::BeginPlay()
+void ALobbyPlayerController::Server_CheckIsEveryoneReady_Implementation()
 {
-	Super::BeginPlay();
+	AMPRaceGameMode* GM = Cast<AMPRaceGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	GM->CheckEveryoneReady();
+}
+
+void ALobbyPlayerController::Server_ToggleIsReady_Implementation()
+{
+	ARacePlayerState* PS = Cast<ARacePlayerState>(PlayerState);
+
+	PS->isReady = PS->isReady ? false : true;
 }
 
 void ALobbyPlayerController::Server_SelectNewCar_Implementation(bool isAdding)
@@ -29,12 +40,16 @@ void ALobbyPlayerController::Server_SelectNewCar_Implementation(bool isAdding)
 
 	TArray<FCarData*> AllCarData = GI->GetGameData()->GetCars();
 
+	int32 SelectedCarIndex = Cast<ARacePlayerState>(PlayerState)->SelectedCarIndex;
+
 	if (isAdding && SelectedCarIndex + 1 < AllCarData.Num()) {
 		SelectedCarIndex++;
+		Cast<ARacePlayerState>(PlayerState)->SelectedCarIndex = SelectedCarIndex;
 		Server_DisplayCarInLobby(SelectedCarIndex);
 	}
 	else if (!isAdding && SelectedCarIndex - 1 >= 0) {
 		SelectedCarIndex--;
+		Cast<ARacePlayerState>(PlayerState)->SelectedCarIndex = SelectedCarIndex;
 		Server_DisplayCarInLobby(SelectedCarIndex);
 	}
 }
