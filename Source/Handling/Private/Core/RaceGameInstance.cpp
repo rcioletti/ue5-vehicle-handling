@@ -7,7 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include <OnlineSubsystem.h>
 
-URaceGameInstance::URaceGameInstance() {
+URaceGameInstance::URaceGameInstance() 
+{
 
 	OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &URaceGameInstance::OnCreateSessionComplete);
 	OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &URaceGameInstance::OnStartOnlineGameComplete);
@@ -30,7 +31,8 @@ void URaceGameInstance::Shutdown()
 {
 	Super::Shutdown();
 
-	if (IsValid(GameDataInstance)) {
+	if (IsValid(GameDataInstance)) 
+	{
 		GameDataInstance->ConditionalBeginDestroy();
 	}
 }
@@ -105,11 +107,13 @@ void URaceGameInstance::OnStartOnlineGameComplete(FName SessionName, bool bWasSu
 
 void URaceGameInstance::BeginLoadingScreen(const FString& MapName)
 {
-	if (!IsRunningDedicatedServer()) {
+	if (!IsRunningDedicatedServer()) 
+	{
 		FLoadingScreenAttributes LoadScreenAtt;
 		LoadScreenAtt.bAutoCompleteWhenLoadingCompletes = false;
 
-		if (UseMovies) {
+		if (UseMovies) 
+		{
 			LoadScreenAtt.MoviePaths = StringPaths;
 		}
 
@@ -129,8 +133,8 @@ void URaceGameInstance::LoadGame()
 	USaveGame* LoadedGame = UGameplayStatics::LoadGameFromSlot(SaveGameSlotName, 0);
 	SaveGameObject = Cast<URaceSaveGame>(LoadedGame);
 
-	if (!SaveGameObject) {
-
+	if (!SaveGameObject) 
+	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Creating new save game")));
 
 		SaveGameObject = Cast<URaceSaveGame>(UGameplayStatics::CreateSaveGameObject(URaceSaveGame::StaticClass()));
@@ -148,9 +152,10 @@ void URaceGameInstance::SetCarCustomizations(FCarCustomizations CarMod)
 {
 	bool bWasSet = false;
 
-	for (int i = 0; i < SaveGameObject->CarMods.Num(); i++) {
-		
-		if (SaveGameObject->CarMods[i].Car == CarMod.Car) {
+	for (int i = 0; i < SaveGameObject->CarMods.Num(); i++) 
+	{
+		if (SaveGameObject->CarMods[i].Car == CarMod.Car) 
+		{
 			
 			bWasSet = true;
 
@@ -161,8 +166,8 @@ void URaceGameInstance::SetCarCustomizations(FCarCustomizations CarMod)
 		}
 	}
 		
-	if (!bWasSet) {
-
+	if (!bWasSet) 
+	{
 		SaveGameObject->CarMods.Add(CarMod);
 
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, FString::Printf(TEXT("Set custom mods added new car")));
@@ -173,11 +178,12 @@ void URaceGameInstance::SetCarCustomizations(FCarCustomizations CarMod)
 
 FCarCustomizations URaceGameInstance::GetCarCustomizations(TSubclassOf<ARaceCarPawn> CarPawnReference)
 {
-	if (SaveGameObject != NULL) {
-		for (int i = 0; i < SaveGameObject->CarMods.Num(); i++) {
-
-			if (SaveGameObject->CarMods[i].Car == CarPawnReference) {
-
+	if (SaveGameObject != NULL) 
+	{
+		for (int i = 0; i < SaveGameObject->CarMods.Num(); i++) 
+		{
+			if (SaveGameObject->CarMods[i].Car == CarPawnReference) 
+			{
 				return SaveGameObject->CarMods[i];
 			}
 		}
@@ -198,8 +204,8 @@ void URaceGameInstance::RemoveMoney(int32 Money)
 
 bool URaceGameInstance::SetNewBestTime(float Time, FString MapName)
 {
-	if (Time < SaveGameObject->BestLapTime) {
-		
+	if (Time < SaveGameObject->BestLapTime) 
+	{
 		SaveGameObject->BestLapTime = Time;
 
 		return true;

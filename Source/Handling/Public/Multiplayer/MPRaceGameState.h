@@ -16,19 +16,6 @@ class HANDLING_API AMPRaceGameState : public AGameState
 	
 public:
 
-	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
-
-	UPROPERTY(BlueprintReadWRite, EditAnywhere)
-	TSubclassOf<AActor> BPCarShowcase;
-
-	//UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LastAddedPlayer)
-	//int32 LastAddedPlayer;
-
-	UPROPERTY(BlueprintReadOnly)
-	TMap<APlayerController*, int32> SelectedCar;
-
-	UFUNCTION(BlueprintCallable, Server, Reliable)
-	void SetNewCarIndex(bool isAdding, APlayerController* PC);
 
 private:
 

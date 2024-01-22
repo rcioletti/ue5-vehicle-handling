@@ -18,15 +18,12 @@ void AMPRaceGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-    AMPRaceGameState* MPGameState = GetWorld()->GetGameState<AMPRaceGameState>();
-
     int32 ServerIndex = Players.Add(NewPlayer);
     
     ALobbyPlayerController* PC = Cast<ALobbyPlayerController>(NewPlayer);
 
     PC->Server_SetPlayerID(ServerIndex);
-
-    MPGameState->SelectedCar.Add(NewPlayer, 0);
+    PC->Server_DisplayCarInLobby(0);
 
     /*FUniqueNetIdRepl UniqueNetIdRepl;
     if (NewPlayer->IsLocalPlayerController())

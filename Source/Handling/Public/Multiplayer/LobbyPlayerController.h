@@ -14,15 +14,25 @@ class HANDLING_API ALobbyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+	virtual void BeginPlay() override;
 
 public:
 
 	UPROPERTY(BlueprintReadOnly)
 	int32 PlayerID;
 
+	UPROPERTY(BlueprintReadOnly)
+	int32 SelectedCarIndex = 0;
+
 	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void Server_SetPlayerID(int32 ID);
 
 	UFUNCTION(BlueprintCallable, Client, Reliable)
 	void Client_SetPlayerID(int32 ID);
+
+	UFUNCTION(Server, Reliable)
+	void Server_DisplayCarInLobby(int32 CarIndex);
+
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void Server_SelectNewCar(bool isAdding);
 };
