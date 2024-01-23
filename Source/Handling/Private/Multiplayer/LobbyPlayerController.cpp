@@ -5,9 +5,8 @@
 #include <Core\RaceGameInstance.h>
 #include <Multiplayer\LobbyShowcaseCar.h>
 #include <Kismet\GameplayStatics.h>
-#include <Multiplayer\MPRaceGameState.h>
-#include <Multiplayer\MPRaceGameMode.h>
-#include <Player\RacePlayerState.h>
+#include <Multiplayer\LobbyGameMode.h>
+#include <Multiplayer\RacePlayerState.h>
 
 
 void ALobbyPlayerController::Server_SetPlayerID_Implementation(int32 ID)
@@ -22,7 +21,7 @@ void ALobbyPlayerController::Client_SetPlayerID_Implementation(int32 ID)
 
 void ALobbyPlayerController::Server_CheckIsEveryoneReady_Implementation()
 {
-	AMPRaceGameMode* GM = Cast<AMPRaceGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	ALobbyGameMode* GM = Cast<ALobbyGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 
 	GM->CheckEveryoneReady();
 }

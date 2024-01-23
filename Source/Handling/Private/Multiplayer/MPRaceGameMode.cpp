@@ -2,56 +2,73 @@
 
 
 #include "Multiplayer/MPRaceGameMode.h"
-#include <Net\UnrealNetwork.h>
-#include <Multiplayer\MPRaceGameState.h>
-#include <Multiplayer\LobbyPlayerController.h>
-#include <Player\RacePlayerState.h>
+#include <Kismet\GameplayStatics.h>
+#include <Multiplayer\RacePlayerState.h>
+#include <Core\GameData.h>
+#include <Core\RaceGameInstance.h>
 
-AMPRaceGameMode::AMPRaceGameMode() {
-
+AMPRaceGameMode::AMPRaceGameMode()
+{
 	PrimaryActorTick.bStartWithTickEnabled = false;
 	PrimaryActorTick.bCanEverTick = false;
 	DefaultPawnClass = nullptr;
-	bReplicates = true;
+}
+
+void AMPRaceGameMode::BeginPlay()
+{
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), AllPlayerStartActor);
 }
 
 void AMPRaceGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-    int32 ServerIndex = Players.Add(NewPlayer);
-    
-    ALobbyPlayerController* PC = Cast<ALobbyPlayerController>(NewPlayer);
-
-    PC->Server_SetPlayerID(ServerIndex);
-    PC->Server_DisplayCarInLobby(0);
+	SpawnPlayer(NewPlayer);
 }
 
-void AMPRaceGameMode::OpenRaceLevel()
+TArray<FTransform> AMPRaceGameMode::FindAllPlayerStart()
 {
-	UWorld* World = GetWorld();
-	bUseSeamlessTravel = true;
-	World->ServerTravel("/Game/Maps/RaceTrack?listen");
-}
+	TArray<FTransform> AllPlayerStartTransform;
 
-void AMPRaceGameMode::CheckEveryoneReady()
-{
-	bool EveryoneReady = false;
-
-	for (int i = 1; i < Players.Num(); i++) {
-		ALobbyPlayerController* PC = Cast<ALobbyPlayerController>(Players[i]);
-		ARacePlayerState* PS = Cast<ARacePlayerState>(PC->PlayerState);
-
-		if (PS->isReady) {
-			EveryoneReady = true;
-		}
-		else {
-			EveryoneReady = false;
-			break;
-		}
+	if (AllPlayerStartActor.Num() <= 0) {
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), AllPlayerStartActor);
 	}
 
-	if (EveryoneReady) {
-		OpenRaceLevel();
+	for (AActor* PlayerStartActor : AllPlayerStartActor)
+	{
+		APlayerStart* PlayerStart = Cast<APlayerStart>(PlayerStartActor);
+		AllPlayerStartTransform.Add(PlayerStart->GetTransform());
+	}
+
+	return AllPlayerStartTransform;
+}
+
+void AMPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
+{
+	TArray<FTransform> AllPlayerStartTransform = FindAllPlayerStart();
+
+	if (PlayerController->GetPawn() != nullptr) {
+		PlayerController->GetPawn()->Destroy();
+	}
+
+	if (PlayerController->PlayerState) {
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = PlayerController;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		const FVector SpawnLocation = AllPlayerStartTransform[0].GetLocation() - FVector(0, 0, 90);
+		const FRotator SpawnRotation = AllPlayerStartTransform[0].Rotator();
+
+		ARacePlayerState* PS = Cast<ARacePlayerState>(PlayerController->PlayerState);
+		URaceGameInstance* GI = Cast<URaceGameInstance>(GetGameInstance());
+		
+		FCarData* CarData = GI->GetGameData()->GetCars()[PS->SelectedCarIndex];
+
+
+		ARaceCarPawn* SpawnedPlayerCar = Cast<ARaceCarPawn>(GetWorld()->SpawnActor(CarData->CarPawn, &SpawnLocation, &SpawnRotation, SpawnParams));
+		PlayerController->Possess(SpawnedPlayerCar);
+
+		//SpawnedPlayerCar->ChaosWheeledVehicleMovementComponent->SetHandbrakeInput(1.0f);
+
+		Cars.Add(SpawnedPlayerCar);
 	}
 }

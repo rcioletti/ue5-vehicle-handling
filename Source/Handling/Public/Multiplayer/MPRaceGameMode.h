@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
+#include <GameFramework\PlayerStart.h>
+#include <Player\RaceCarPawn.h>
 #include "MPRaceGameMode.generated.h"
 
 /**
@@ -13,19 +15,31 @@ UCLASS()
 class HANDLING_API AMPRaceGameMode : public AGameMode
 {
 	GENERATED_BODY()
-
+	
 	AMPRaceGameMode();
+
+	virtual void BeginPlay() override;
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 
+	TArray<FTransform> FindAllPlayerStart();
+
+	TArray<AActor*> AllPlayerStartActor;
+
 public:
 
-	UPROPERTY(BlueprintReadWrite)
-	TArray<APlayerController*> Players;
+	UFUNCTION(BLueprintCallable)
+	void SpawnPlayer(APlayerController* PlayerController);
 
-	UFUNCTION(BlueprintCallable)
-	void OpenRaceLevel();
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	TArray<ARaceCarPawn*> Cars;
 
-	UFUNCTION(BlueprintCallable)
-	void CheckEveryoneReady();
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	int32 GameLaps;
+
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	int32 RacePayout;
+
+	UPROPERTY(BlueprintReadWRite, EditAnywhere)
+	bool bHasRaceStarted = false;
 };
