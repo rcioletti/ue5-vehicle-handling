@@ -17,13 +17,24 @@ AMPRaceGameMode::AMPRaceGameMode()
 void AMPRaceGameMode::BeginPlay()
 {
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), AllPlayerStartActor);
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Map Name: %s"), *GetWorld()->GetMapName()));
 }
 
-void AMPRaceGameMode::PostLogin(APlayerController* NewPlayer)
+void AMPRaceGameMode::GenericPlayerInitialization(AController* Controller)
 {
-	Super::PostLogin(NewPlayer);
+	Super::GenericPlayerInitialization(Controller);
 
-	SpawnPlayer(NewPlayer);
+	if (APlayerController* PC = Cast<APlayerController>(Controller)) 
+	{
+		SpawnPlayer(PC);
+
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Player Spawned")));
+	}
+	else 
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("Failed to cast Controller to Player Controller")));
+	}
 }
 
 TArray<FTransform> AMPRaceGameMode::FindAllPlayerStart()
@@ -55,8 +66,8 @@ void AMPRaceGameMode::SpawnPlayer(APlayerController* PlayerController)
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = PlayerController;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		const FVector SpawnLocation = AllPlayerStartTransform[0].GetLocation() - FVector(0, 0, 90);
-		const FRotator SpawnRotation = AllPlayerStartTransform[0].Rotator();
+		const FVector SpawnLocation = AllPlayerStartTransform[Cars.Num()].GetLocation() - FVector(0, 0, 90);
+		const FRotator SpawnRotation = AllPlayerStartTransform[Cars.Num()].Rotator();
 
 		ARacePlayerState* PS = Cast<ARacePlayerState>(PlayerController->PlayerState);
 		URaceGameInstance* GI = Cast<URaceGameInstance>(GetGameInstance());

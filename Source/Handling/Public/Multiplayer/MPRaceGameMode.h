@@ -20,7 +20,7 @@ class HANDLING_API AMPRaceGameMode : public AGameMode
 
 	virtual void BeginPlay() override;
 
-	virtual void PostLogin(APlayerController* NewPlayer) override;
+	virtual void GenericPlayerInitialization(AController* Controller) override;
 
 	TArray<FTransform> FindAllPlayerStart();
 

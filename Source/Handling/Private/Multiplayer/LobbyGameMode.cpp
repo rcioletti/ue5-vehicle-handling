@@ -24,13 +24,13 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
     ALobbyPlayerController* PC = Cast<ALobbyPlayerController>(NewPlayer);
 
     PC->Server_SetPlayerID(ServerIndex);
-    PC->Server_DisplayCarInLobby(0);
+	PC->Server_DisplayCarInLobby(0);
 }
 
 void ALobbyGameMode::OpenRaceLevel()
 {
 	UWorld* World = GetWorld();
-	World->ServerTravel("/Game/Maps/RaceTrack?listen&game=/Game/Core/BMPRaceGameMode.BMPRaceGameMode_C");
+	World->ServerTravel("RaceTrack?listen&game=/Game/Core/BMPRaceGameMode.BMPRaceGameMode_C");
 }
 
 void ALobbyGameMode::CheckEveryoneReady()
